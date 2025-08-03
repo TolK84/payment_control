@@ -8,8 +8,8 @@ const app = Vue.createApp({
             message: '',
             messageColor: 'red',
             isLoading: false,
-            checkAuthWebhookUrl: 'https://tty34.app.n8n.cloud/webhook-test/check-auth',
-            loginWebhookUrl: 'https://tty34.app.n8n.cloud/webhook-test/login'
+            checkAuthWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/check-auth',
+            loginWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/login'
         }
     },
     methods: {
@@ -72,5 +72,6 @@ const app = Vue.createApp({
         }
     }
 });
+
 
 app.mount('#app');
