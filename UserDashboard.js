@@ -93,7 +93,7 @@ const UserDashboard = {
             body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
         });
         const data = await response.json();
-        this.documents = data.map(item => item.json);
+        this.documents = data;
       } catch (error) {
         alert('Не удалось загрузить документы.');
       } finally {
@@ -110,5 +110,6 @@ const UserDashboard = {
     }
   }
 };
+
 
 
