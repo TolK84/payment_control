@@ -25,7 +25,6 @@ const UserDashboard = {
 
       <div v-if="showingDocumentList">
         <h2>Загруженные документы</h2>
-        <pre v-if="debugData" style="background-color: #eee; border: 1px solid #ccc; padding: 10px; text-align: left; white-space: pre-wrap; word-break: break-all;">{{ JSON.stringify(debugData, null, 2) }}</pre>
         <div v-if="isLoading">
           <p>Загрузка...</p>
         </div>
@@ -53,8 +52,7 @@ const UserDashboard = {
       showingDocumentList: false,
       documents: [],
       isLoading: false,
-      getInvoicesWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/get-invoices',
-      debugData: null
+      getInvoicesWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/get-invoices'
     }
   },
   methods: {
@@ -97,7 +95,6 @@ const UserDashboard = {
             body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
         });
         const data = await response.json();
-        this.debugData = data;
         this.documents = [data];
       } catch (error) {
         this.debugData = { error: error.message };

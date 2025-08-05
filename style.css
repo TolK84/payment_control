@@ -135,9 +135,12 @@ button:disabled {
   border-bottom-color: var(--tg-theme-button-color);
 }
 .doc-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 5px;
 }
 .doc-list li {
   display: flex;
