@@ -25,6 +25,7 @@ const UserDashboard = {
 
       <div v-if="showingDocumentList">
         <h2>Загруженные документы</h2>
+        <pre v-if="debugData" style="background-color: #eee; border: 1px solid #ccc; padding: 10px; text-align: left; white-space: pre-wrap; word-break: break-all;">{{ JSON.stringify(debugData, null, 2) }}</pre>
         <div v-if="isLoading">
           <p>Загрузка...</p>
         </div>
@@ -87,7 +88,9 @@ const UserDashboard = {
     async fetchDocuments() {
       this.showingDocumentList = true;
       this.isLoading = true;
-      this.debugData = null;
+      this.documents = [];
+      this.debugData = {};
+
       try {
         const response = await fetch(this.getInvoicesWebhookUrl, {
             method: 'POST',
@@ -95,14 +98,23 @@ const UserDashboard = {
             body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
         });
         const data = await response.json();
-        this.documents = [data];
+
+        this.debugData.rawResponse = data;
+        this.debugData.responseType = typeof data;
+        this.debugData.isResponseAnArray = Array.isArray(data);
+
+        this.documents = data;
+
+        this.debugData.documentsAfterAssign = this.documents;
+        this.debugData.documentsLength = this.documents ? this.documents.length : 0;
+
       } catch (error) {
-        this.debugData = { error: error.message };
+        this.debugData.error = { message: error.message, stack: error.stack };
         alert('Не удалось загрузить документы.');
       } finally {
         this.isLoading = false;
       }
-    },
+},
     getStatusText(status) {
         const statuses = {
             'approved': 'Согласован',
