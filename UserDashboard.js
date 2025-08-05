@@ -20,12 +20,10 @@ const UserDashboard = {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
           Сделать фото
         </button>
-
       </div>
 
       <div v-if="showingDocumentList">
         <h2>Загруженные документы</h2>
-        <pre v-if="debugData" style="background-color: #eee; border: 1px solid #ccc; padding: 10px; text-align: left; white-space: pre-wrap; word-break: break-all;">{{ JSON.stringify(debugData, null, 2) }}</pre>
         <div v-if="isLoading">
           <p>Загрузка...</p>
         </div>
@@ -88,33 +86,20 @@ const UserDashboard = {
     async fetchDocuments() {
       this.showingDocumentList = true;
       this.isLoading = true;
-      this.documents = [];
-      this.debugData = {};
-
       try {
-        const response = await fetch(this.getInvoicesWebhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
-        });
-        const data = await response.json();
-
-        this.debugData.rawResponse = data;
-        this.debugData.responseType = typeof data;
-        this.debugData.isResponseAnArray = Array.isArray(data);
-
-        this.documents = data;
-
-        this.debugData.documentsAfterAssign = this.documents;
-        this.debugData.documentsLength = this.documents ? this.documents.length : 0;
-
+          const response = await fetch(this.getInvoicesWebhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
+          });
+          const data = await response.json();
+          this.documents = data;
       } catch (error) {
-        this.debugData.error = { message: error.message, stack: error.stack };
-        alert('Не удалось загрузить документы.');
+          alert('Не удалось загрузить документы.');
       } finally {
-        this.isLoading = false;
+          this.isLoading = false;
       }
-},
+    },
     getStatusText(status) {
         const statuses = {
             'approved': 'Согласован',
@@ -125,4 +110,3 @@ const UserDashboard = {
     }
   }
 };
-
