@@ -28,13 +28,13 @@ const UserDashboard = {
           <p>Загрузка...</p>
         </div>
         <ul v-else class="doc-list">
-            <li v-for="doc in documents" :key="doc.id">
-                <div>
-                    <span class="doc-name">{{ doc['Счет'] }}</span>
-                    <span class="doc-details">Дата: {{ doc['Дата счета'] }}</span>
-                </div>
-                <span class="doc-amount">{{ doc['Итоговая сумма'] }} KZT</span>
-            </li>
+          <li v-for="doc in documents" :key="doc.id">
+            <div>
+                <span class="doc-name">{{ doc.name }}</span>
+                <span class="doc-details">Дата: {{ doc.date }}</span>
+            </div>
+            <span class="doc-amount">{{ doc.amount }} KZT</span>
+          </li>
         </ul>
       </div>
 
@@ -93,7 +93,7 @@ const UserDashboard = {
             body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
         });
         const data = await response.json();
-        this.documents = data; 
+        this.documents = data;
       } catch (error) {
         alert('Не удалось загрузить документы.');
       } finally {
@@ -109,5 +109,4 @@ const UserDashboard = {
         return statuses[status] || 'Неизвестно';
     }
   }
-
 };
