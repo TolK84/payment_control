@@ -98,7 +98,7 @@ const UserDashboard = {
         });
         const data = await response.json();
         this.debugData = data;
-        this.documents = data;
+        this.documents = [data];
       } catch (error) {
         this.debugData = { error: error.message };
         alert('Не удалось загрузить документы.');
