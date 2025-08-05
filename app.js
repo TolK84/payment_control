@@ -75,5 +75,4 @@ const app = Vue.createApp({
 
 app.component('user-dashboard', UserDashboard);
 
-
 app.mount('#app');

@@ -28,10 +28,13 @@ const UserDashboard = {
           <p>Загрузка...</p>
         </div>
         <ul v-else class="doc-list">
-          <li v-for="doc in documents" :key="doc.id">
-            <span class="doc-name">{{ doc.name }}</span>
-            <span class="doc-status" :class="doc.status">{{ getStatusText(doc.status) }}</span>
-          </li>
+            <li v-for="doc in documents" :key="doc.id">
+                <div>
+                    <span class="doc-name">{{ doc['Счет'] }}</span>
+                    <span class="doc-details">Дата: {{ doc['Дата счета'] }}</span>
+                </div>
+                <span class="doc-amount">{{ doc['Итоговая сумма'] }} KZT</span>
+            </li>
         </ul>
       </div>
 
