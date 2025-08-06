@@ -2,7 +2,12 @@ const UserDashboard = {
   template: `
     <div>
       <div v-if="!showingDocumentList">
-        <h2>Загрузка счета</h2>
+        <div class="header-with-button">
+          <h2>Загрузка счета</h2>
+          <button @click="$root.toggleFullscreen" class="toggle-fullscreen-btn">
+            {{ $root.isFullscreen ? 'Свернуть' : 'Развернуть' }}
+          </button>
+        </div>
         
         <div 
           class="drop-zone"
@@ -23,7 +28,12 @@ const UserDashboard = {
       </div>
 
       <div v-if="showingDocumentList">
-        <h2>Загруженные документы</h2>
+        <div class="header-with-button">
+          <h2>Загруженные документы</h2>
+          <button @click="$root.toggleFullscreen" class="toggle-fullscreen-btn">
+            {{ $root.isFullscreen ? 'Свернуть' : 'Развернуть' }}
+          </button>
+        </div>
         <div v-if="isLoading">
           <p>Загрузка...</p>
         </div>

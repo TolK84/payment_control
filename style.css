@@ -174,3 +174,18 @@ button:disabled {
     white-space: nowrap;
     margin-left: 10px;
 }
+.header-with-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.toggle-fullscreen-btn {
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    font-size: 14px;
+}

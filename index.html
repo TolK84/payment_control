@@ -16,10 +16,6 @@
 <body>
     <div id="app">
         
-        <button @click="goFullscreen" style="position: absolute; top: 5px; right: 5px; z-index: 9999; padding: 5px 10px; border-radius: 8px; border: 1px solid #ccc; background-color: #f0f0f0; cursor: pointer;">
-            Развернуть
-        </button>
-
         <div v-if="authState === 'checking'">
             <h1>Проверка авторизации...</h1>
         </div>
