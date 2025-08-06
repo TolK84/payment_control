@@ -13,6 +13,11 @@ const app = Vue.createApp({
         }
     },
     methods: {
+        goFullscreen() {
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.requestFullscreen) {
+                window.Telegram.WebApp.requestFullscreen();
+            }
+        },
         async checkAuthentication() {
             try {
                 const response = await fetch(this.checkAuthWebhookUrl, {
@@ -68,7 +73,6 @@ const app = Vue.createApp({
     mounted() {
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
             this.checkAuthentication();
         }
     }
