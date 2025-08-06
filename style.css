@@ -1,3 +1,4 @@
+/* Подключаем шрифт и задаем основные переменные темы Telegram */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
 :root {
@@ -7,37 +8,27 @@
     --tg-theme-button-text-color: #ffffff;
 }
 
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--tg-theme-bg-color);
     color: var(--tg-theme-text-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    box-sizing: border-box;
 }
 
 #app {
-    height: 100%;
     width: 100%;
-    max-width: 480px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    position: relative;
+    max-width: 320px;
 }
 
-.main-content {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 20px;
-    padding-bottom: 80px;
-}
-
-h1, h2 {
+h1 {
     text-align: center;
     font-size: 24px;
-    margin-top: 0;
     margin-bottom: 20px;
 }
 
@@ -85,7 +76,6 @@ button:disabled {
 .mt-15 {
   margin-top: 15px;
 }
-
 .btn-main {
   width: 100%;
   padding: 12px;
@@ -101,7 +91,6 @@ button:disabled {
   align-items: center;
   gap: 8px;
 }
-
 .btn-secondary {
   border: none;
   background: none;
@@ -111,7 +100,6 @@ button:disabled {
   cursor: pointer;
   padding: 8px;
 }
-
 .drop-zone {
   border: 2px dashed #ccc;
   border-radius: 12px;
@@ -119,23 +107,19 @@ button:disabled {
   text-align: center;
   transition: background-color 0.2s, border-color 0.2s;
 }
-
 .drop-zone.drag-over {
   background-color: #f0f8ff;
   border-color: var(--tg-theme-button-color);
 }
-
 .navigation {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  width: 100%;
   display: flex;
   background-color: #f8f8f8;
   border-top: 1px solid #e0e0e0;
 }
-
 .navigation button {
   flex: 1;
   padding: 15px;
@@ -146,18 +130,18 @@ button:disabled {
   cursor: pointer;
   border-bottom: 3px solid transparent;
 }
-
 .navigation button.active {
   color: var(--tg-theme-button-color);
   border-bottom-color: var(--tg-theme-button-color);
 }
-
 .doc-list {
     list-style: none;
     padding: 0;
     margin: 0;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 5px;
 }
-
 .doc-list li {
   display: flex;
   justify-content: space-between;
@@ -165,10 +149,18 @@ button:disabled {
   padding: 15px 10px;
   border-bottom: 1px solid #f0f0f0;
 }
-
 .doc-name {
   font-size: 16px;
 }
+.doc-status {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+.doc-status.approved { background-color: #e0f8e0; color: #008000; }
+.doc-status.pending { background-color: #fff8e0; color: #f39c12; }
+.doc-status.rejected { background-color: #ffe0e0; color: #c0392b; }
 
 .doc-details {
     display: block;
@@ -176,24 +168,9 @@ button:disabled {
     color: #888;
     margin-top: 4px;
 }
-
 .doc-amount {
     font-size: 16px;
     font-weight: 500;
     white-space: nowrap;
     margin-left: 10px;
-}
-
-.global-fullscreen-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    z-index: 9999;
-    padding: 5px 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    background-color: #f0f0f0;
-    color: #333;
-    cursor: pointer;
-    font-size: 14px;
 }
