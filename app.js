@@ -1,6 +1,11 @@
-Telegram.WebApp.ready();
+function setFullScreen() {
+  if (!Telegram.WebApp.isExpanded) {
+    Telegram.WebApp.expand();
+  }
+}
 
-Telegram.WebApp.expand();
+Telegram.WebApp.onEvent('viewportChanged', setFullScreen);
+setFullScreen();
 
 const app = Vue.createApp({
     data() {
