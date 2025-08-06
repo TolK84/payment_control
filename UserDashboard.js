@@ -40,7 +40,7 @@ const UserDashboard = {
 
       <div class="navigation">
         <button @click="showingDocumentList = false" :class="{ active: !showingDocumentList }">Загрузить</button>
-        <button @click="fetchDocuments" :class="{ active: showingDocumentList }">Посмотреть</button>
+        <button @click="fetchDocuments" :class="{ active: showingDocumentList }">Посмотреть счета</button>
       </div>
 
     </div>

@@ -45,7 +45,7 @@ const AdminDashboard = {
 
       <div class="navigation">
         <button @click="showingDocumentList = false" :class="{ active: !showingDocumentList }">Загрузить</button>
-        <button @click="fetchDocuments" :class="{ active: showingDocumentList }">Посмотреть</button>
+        <button @click="fetchDocuments" :class="{ active: showingDocumentList }">Посмотреть счета</button>
       </div>
 
     </div>
@@ -56,8 +56,8 @@ const AdminDashboard = {
       showingDocumentList: false,
       documents: [],
       isLoading: false,
-      getAllInvoicesWebhookUrl: 'СЮДА_ВАШ_URL_ИЗ_N8N_ДЛЯ_ПОЛУЧЕНИЯ_ВСЕХ_СЧЕТОВ',
-      googleSheetUrl: 'СЮДА_ССЫЛКУ_НА_ВАШУ_ГУГЛ_ТАБЛИЦУ'
+      getAllInvoicesWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/get-invoices',
+      googleSheetUrl: 'https://docs.google.com/spreadsheets/d/1GkpFQ275xwCdeKTZ1BaWDL7PVD4L_lz-PyjRDmp4z8Q/edit?gid=0#gid=0'
     }
   },
   methods: {
