@@ -1,3 +1,7 @@
+Telegram.WebApp.ready();
+
+Telegram.WebApp.expand();
+
 const app = Vue.createApp({
     data() {
         return {
