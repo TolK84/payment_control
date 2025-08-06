@@ -2,12 +2,7 @@ const AdminDashboard = {
   template: `
     <div>
       <div v-if="!showingDocumentList">
-        <div class="header-with-button">
-          <h2>Загрузка счета</h2>
-          <button @click="$root.toggleFullscreen" class="toggle-fullscreen-btn">
-            {{ $root.isFullscreen ? 'Свернуть' : 'Развернуть' }}
-          </button>
-        </div>
+        <h2>Загрузка счета</h2>
         
         <div 
           class="drop-zone"
@@ -28,12 +23,7 @@ const AdminDashboard = {
       </div>
 
       <div v-if="showingDocumentList">
-        <div class="header-with-button">
-          <h2>Загруженные документы (Все)</h2>
-          <button @click="$root.toggleFullscreen" class="toggle-fullscreen-btn">
-            {{ $root.isFullscreen ? 'Свернуть' : 'Развернуть' }}
-          </button>
-        </div>
+        <h2>Загруженные документы (Все)</h2>
         
         <button @click="redirectToGoogleSheet" class="btn-main" style="margin-bottom: 15px;">
             Перейти в Google Таблицу
@@ -119,7 +109,7 @@ const AdminDashboard = {
     },
     redirectToGoogleSheet() {
         if (this.googleSheetUrl && this.googleSheetUrl !== 'СЮДА_ССЫЛКУ_НА_ВАШУ_ГУГЛ_ТАБЛИЦУ') {
-            window.Telegram.WebApp.openLink(this.googleSheetUrl);
+            Telegram.WebApp.openLink(this.googleSheetUrl);
         } else {
             alert('URL Google Таблицы не настроен.');
         }

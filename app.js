@@ -77,10 +77,6 @@ const app = Vue.createApp({
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
             
-            if (window.Telegram.WebApp.requestFullscreen) {
-                window.Telegram.WebApp.requestFullscreen();
-            }
-
             window.Telegram.WebApp.onEvent('fullscreenChanged', (event) => {
                 this.isFullscreen = event.isFullscreen;
             });

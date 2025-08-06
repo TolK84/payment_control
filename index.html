@@ -16,6 +16,10 @@
 <body>
     <div id="app">
         
+        <button v-if="authState === 'authenticated'" @click="toggleFullscreen" class="global-fullscreen-btn">
+            {{ isFullscreen ? 'Свернуть' : 'Развернуть' }}
+        </button>
+
         <div v-if="authState === 'checking'">
             <h1>Проверка авторизации...</h1>
         </div>
@@ -34,7 +38,7 @@
             <p id="message" :style="{ color: messageColor }">{{ message }}</p>
         </form>
 
-        <div v-if="authState === 'authenticated'">
+        <div v-if="authState === 'authenticated'" class="main-content">
             <user-dashboard v-if="userRole === 'user'"></user-dashboard>
             <admin-dashboard v-if="userRole === 'admin'"></admin-dashboard>
             <div v-if="userRole === 'approver'">Содержимое для согласующего</div>
