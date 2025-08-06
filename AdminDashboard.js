@@ -58,7 +58,7 @@ const AdminDashboard = {
       isLoading: false,
       getAllInvoicesWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/get-invoices',
       googleSheetUrl: 'https://docs.google.com/spreadsheets/d/1GkpFQ275xwCdeKTZ1BaWDL7PVD4L_lz-PyjRDmp4z8Q/edit?gid=0#gid=0',
-      isDesktop: Telegram.WebApp.platform === 'tdesktop'
+      isDesktop: window.Telegram.WebApp.platform === 'tdesktop'
     }
   },
   methods: {

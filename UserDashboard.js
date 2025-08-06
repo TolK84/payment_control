@@ -52,7 +52,7 @@ const UserDashboard = {
       documents: [],
       isLoading: false,
       getInvoicesWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/get-invoices',
-      isDesktop: Telegram.WebApp.platform === 'tdesktop'
+      isDesktop: window.Telegram.WebApp.platform === 'tdesktop'
     }
   },
   methods: {
