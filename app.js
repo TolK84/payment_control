@@ -9,18 +9,10 @@ const app = Vue.createApp({
             messageColor: 'red',
             isLoading: false,
             checkAuthWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/check-auth',
-            loginWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/login',
-            isFullscreen: false
+            loginWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/login'
         }
     },
     methods: {
-        toggleFullscreen() {
-            if (this.isFullscreen) {
-                Telegram.WebApp.exitFullscreen();
-            } else {
-                Telegram.WebApp.requestFullscreen();
-            }
-        },
         async checkAuthentication() {
             try {
                 const response = await fetch(this.checkAuthWebhookUrl, {
@@ -75,16 +67,8 @@ const app = Vue.createApp({
     },
     mounted() {
         if (window.Telegram && window.Telegram.WebApp) {
-            Telegram.WebApp.ready();
-            
-            if (Telegram.WebApp.requestFullscreen) {
-                Telegram.WebApp.requestFullscreen();
-            }
-
-            Telegram.WebApp.onEvent('fullscreenChanged', (event) => {
-                this.isFullscreen = event.isFullscreen;
-            });
-
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
             this.checkAuthentication();
         }
     }
