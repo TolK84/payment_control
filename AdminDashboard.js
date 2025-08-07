@@ -5,8 +5,10 @@ const AdminDashboard = {
       {{ uploadMessage }}
     </p>
 
-    <div v-if="!showingDocumentList">
-      <h2>Отправка на согласование</h2>
+    <div v-if="!showingDocumentList" class="send-section">
+
+      <h2 class="section-title">Отправка на согласование</h2>
+
       <p>Выберите файл для отправки:</p>
 
       <div 
