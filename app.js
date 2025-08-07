@@ -12,19 +12,25 @@ const app = Vue.createApp({
             loginWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/login',
             isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
             isFullscreen: false
-        };
+        }
     },
     methods: {
         toggleFullscreen() {
-            const tg = window.Telegram?.WebApp;
+            const tg = window.Telegram.WebApp;
+
             if (!tg) return;
 
-            if (this.isFullscreen) {
+            if (tg.isFullscreen) {
                 tg.exitFullscreen();
             } else {
                 tg.requestFullscreen();
             }
+
+            setTimeout(() => {
+                this.isFullscreen = tg.isFullscreen;
+            }, 300);
         },
+
         async checkAuthentication() {
             try {
                 const response = await fetch(this.checkAuthWebhookUrl, {
@@ -45,6 +51,7 @@ const app = Vue.createApp({
                 this.message = 'Ошибка сети при проверке.';
             }
         },
+
         async processLogin() {
             this.isLoading = true;
             this.message = 'Проверка...';
@@ -78,17 +85,20 @@ const app = Vue.createApp({
         }
     },
     mounted() {
-        const tg = window.Telegram?.WebApp;
-        if (!tg) return;
+        if (window.Telegram && window.Telegram.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.ready();
 
-        tg.ready();
-        this.checkAuthentication();
+            this.checkAuthentication();
 
-        this.isFullscreen = tg.isFullscreen;
+            if (!this.isDesktop) {
+                tg.requestFullscreen();
+            }
 
-        tg.onEvent('viewportChanged', () => {
             this.isFullscreen = tg.isFullscreen;
-        });
+
+            // Можно обновлять вручную через поллинг или на toggle, если Telegram не кидает события
+        }
     }
 });
 
