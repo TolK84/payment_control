@@ -34,7 +34,7 @@ html, body {
 /* Кнопки */
 button {
     width: 100%;
-    padding: 12px;
+    padding: 2px;
     border: none;
     border-radius: 8px;
     font-size: 16px;
