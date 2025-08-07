@@ -8,8 +8,8 @@ const app = Vue.createApp({
             message: '',
             messageColor: 'red',
             isLoading: false,
-            checkAuthWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/check-auth',
-            loginWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/login',
+            checkAuthWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/check-auth',
+            loginWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/login',
             isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
             isFullscreen: false
         }

@@ -51,7 +51,7 @@ const UserDashboard = {
       showingDocumentList: false,
       documents: [],
       isLoading: false,
-      getInvoicesWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/get-invoices',
+      getInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-invoices',
       isDesktop: window.Telegram.WebApp.platform === 'tdesktop'
     }
   },

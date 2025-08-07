@@ -56,7 +56,7 @@ const AdminDashboard = {
       showingDocumentList: false,
       documents: [],
       isLoading: false,
-      getAllInvoicesWebhookUrl: 'https://tty34.app.n8n.cloud/webhook/get-invoices',
+      getAllInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-invoices',
       googleSheetUrl: 'https://docs.google.com/spreadsheets/d/1GkpFQ275xwCdeKTZ1BaWDL7PVD4L_lz-PyjRDmp4z8Q/edit?gid=0#gid=0',
       isDesktop: window.Telegram.WebApp.platform === 'tdesktop'
     }
@@ -108,7 +108,7 @@ const AdminDashboard = {
       }
     },
     redirectToGoogleSheet() {
-        if (this.googleSheetUrl && this.googleSheetUrl !== 'СЮДА_ССЫЛКУ_НА_ВАШУ_ГУГЛ_ТАБЛИЦУ') {
+        if (this.googleSheetUrl && this.googleSheetUrl !== 'https://docs.google.com/spreadsheets/d/1GkpFQ275xwCdeKTZ1BaWDL7PVD4L_lz-PyjRDmp4z8Q/edit?gid=191092465#gid=191092465') {
             Telegram.WebApp.openLink(this.googleSheetUrl);
         } else {
             alert('URL Google Таблицы не настроен.');
