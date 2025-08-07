@@ -1,7 +1,7 @@
 const app = Vue.createApp({
     data() {
         return {
-            authState: 'checking',
+            authState: 'checking', 
             userRole: '',
             login: '',
             password: '',
@@ -30,7 +30,6 @@ const app = Vue.createApp({
                 this.isFullscreen = tg.isFullscreen;
             }, 300);
         },
-
         async checkAuthentication() {
             try {
                 const response = await fetch(this.checkAuthWebhookUrl, {
@@ -51,12 +50,11 @@ const app = Vue.createApp({
                 this.message = 'Ошибка сети при проверке.';
             }
         },
-
         async processLogin() {
             this.isLoading = true;
             this.message = 'Проверка...';
             this.messageColor = 'black';
-
+            
             try {
                 const response = await fetch(this.loginWebhookUrl, {
                     method: 'POST',
@@ -97,7 +95,9 @@ const app = Vue.createApp({
 
             this.isFullscreen = tg.isFullscreen;
 
-            // Можно обновлять вручную через поллинг или на toggle, если Telegram не кидает события
+            tg.onEvent('viewportChanged', () => {
+                this.isFullscreen = tg.isFullscreen;
+            });
         }
     }
 });
