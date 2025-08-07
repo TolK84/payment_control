@@ -262,13 +262,13 @@ input:checked + .slider:before {
 }
 
 .section-title {
-    margin-top: 20px; /* Добавьте отступ сверху */
+    margin-top: 60px; /* Добавьте отступ сверху */
     margin-bottom: 15px; /* Или измените отступ снизу */
 }
 
 
 .send-section {
-    padding-top: 20px; /* Добавьте отступ сверху ко всему разделу */
+    padding-top: 40px; /* Добавьте отступ сверху ко всему разделу */
 }
 
 
