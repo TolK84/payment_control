@@ -1,4 +1,3 @@
-/* Подключаем шрифт и задаем основные переменные темы Telegram */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
 :root {
@@ -8,30 +7,65 @@
     --tg-theme-button-text-color: #ffffff;
 }
 
+/* Общие стили */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--tg-theme-bg-color);
     color: var(--tg-theme-text-color);
     margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    padding: 0;
     box-sizing: border-box;
 }
 
 #app {
+    padding: 20px;
     width: 100%;
-    max-width: 320px;
+    max-width: 100%;
 }
 
-h1 {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
+/* Кнопки */
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
 }
 
+button:disabled {
+    background-color: #aaa;
+}
+
+.btn-main {
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-secondary {
+    background: none;
+    color: var(--tg-theme-button-color);
+    padding: 8px;
+}
+
+/* Поля ввода */
+input[type="text"],
+input[type="password"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Авторизация */
 .form-group {
     margin-bottom: 15px;
 }
@@ -42,98 +76,27 @@ label {
     font-weight: 500;
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-sizing: border-box;
-    font-size: 16px;
-}
-
-button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--tg-theme-button-color);
-    color: var(--tg-theme-button-text-color);
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-button:disabled {
-    background-color: #aaa;
-}
-
-#message {
+h1, h2 {
     text-align: center;
-    margin-top: 15px;
-    font-weight: 500;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
-.mt-15 {
-  margin-top: 15px;
-}
-.btn-main {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  background-color: var(--tg-theme-button-color);
-  color: var(--tg-theme-button-text-color);
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-.btn-secondary {
-  border: none;
-  background: none;
-  color: var(--tg-theme-button-color);
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 8px;
-}
+/* Перетаскивание */
 .drop-zone {
-  border: 2px dashed #ccc;
-  border-radius: 12px;
-  padding: 40px 20px;
-  text-align: center;
-  transition: background-color 0.2s, border-color 0.2s;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: background-color 0.2s, border-color 0.2s;
 }
+
 .drop-zone.drag-over {
-  background-color: #f0f8ff;
-  border-color: var(--tg-theme-button-color);
+    background-color: #f0f8ff;
+    border-color: var(--tg-theme-button-color);
 }
-.navigation {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  background-color: #f8f8f8;
-  border-top: 1px solid #e0e0e0;
-}
-.navigation button {
-  flex: 1;
-  padding: 15px;
-  background: none;
-  border: none;
-  font-size: 16px;
-  color: #888;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-}
-.navigation button.active {
-  color: var(--tg-theme-button-color);
-  border-bottom-color: var(--tg-theme-button-color);
-}
+
+/* Список документов */
 .doc-list {
     list-style: none;
     padding: 0;
@@ -142,25 +105,18 @@ button:disabled {
     overflow-y: auto;
     padding-right: 5px;
 }
+
 .doc-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 10px;
-  border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10px;
+    border-bottom: 1px solid #f0f0f0;
 }
+
 .doc-name {
-  font-size: 16px;
+    font-size: 16px;
 }
-.doc-status {
-  font-size: 14px;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 12px;
-}
-.doc-status.approved { background-color: #e0f8e0; color: #008000; }
-.doc-status.pending { background-color: #fff8e0; color: #f39c12; }
-.doc-status.rejected { background-color: #ffe0e0; color: #c0392b; }
 
 .doc-details {
     display: block;
@@ -168,6 +124,7 @@ button:disabled {
     color: #888;
     margin-top: 4px;
 }
+
 .doc-amount {
     font-size: 16px;
     font-weight: 500;
@@ -175,78 +132,44 @@ button:disabled {
     margin-left: 10px;
 }
 
-.toggle-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 9999;
+.doc-status {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 12px;
 }
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 20px;
-}
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
+.doc-status.approved { background-color: #e0f8e0; color: #008000; }
+.doc-status.pending  { background-color: #fff8e0; color: #f39c12; }
+.doc-status.rejected { background-color: #ffe0e0; color: #c0392b; }
+
+/* Навигация */
+.navigation {
+    position: fixed;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-}
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
-    transition: .4s;
-}
-input:checked + .slider {
-    background-color: var(--tg-theme-button-color);
-}
-input:checked + .slider:before {
-    transform: translateX(20px);
-}
-.slider.round {
-    border-radius: 20px;
-}
-.slider.round:before {
-    border-radius: 50%;
+    display: flex;
+    background-color: #f8f8f8;
+    border-top: 1px solid #e0e0e0;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+.navigation button {
+    flex: 1;
+    padding: 15px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #888;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
 }
 
-#app {
-    padding: 20px;
+.navigation button.active {
+    color: var(--tg-theme-button-color);
+    border-bottom-color: var(--tg-theme-button-color);
 }
 
-/* Форма */
-.form-group {
-    margin-bottom: 15px;
-}
-input[type="text"],
-input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-}
-
-/* Общие стили тоггла */
+/* Тоггл */
 .toggle-container {
     position: absolute;
     right: 10px;
@@ -259,34 +182,26 @@ input[type="password"] {
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
-
 .toggle-container.windowed {
-    top: 10px; /* В обычном режиме – ближе к верху */
+    top: 10px;
 }
-
 .toggle-container.fullscreen {
-    top: 60px; /* В фуллскрине – смещено ниже */
+    top: 60px;
 }
-
-/* Подпись */
 .toggle-label {
     font-size: 12px;
 }
-
-/* Миниатюрный тоггл */
 .switch {
     position: relative;
     display: inline-block;
     width: 32px;
     height: 16px;
 }
-
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
-
 .slider {
     position: absolute;
     cursor: pointer;
@@ -297,7 +212,6 @@ input[type="password"] {
     background-color: #ccc;
     transition: .4s;
 }
-
 .slider:before {
     position: absolute;
     content: "";
@@ -308,19 +222,26 @@ input[type="password"] {
     background-color: white;
     transition: .4s;
 }
-
 input:checked + .slider {
     background-color: var(--tg-theme-button-color, #4caf50);
 }
-
 input:checked + .slider:before {
     transform: translateX(16px);
 }
-
 .slider.round {
     border-radius: 16px;
 }
-
 .slider.round:before {
     border-radius: 50%;
+}
+
+/* Прочее */
+#message {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+.mt-15 {
+    margin-top: 15px;
 }
