@@ -16,9 +16,12 @@
 <body>
     <div id="app">
         
-        <button v-if="isDesktop" @click="toggleFullscreen" style="position: absolute; top: 5px; right: 5px; z-index: 9999; padding: 5px 10px; border-radius: 8px; border: 1px solid #ccc; background-color: #f0f0f0; cursor: pointer;">
-            {{ isFullscreen ? 'Свернуть' : 'Развернуть' }}
-        </button>
+        <div v-if="isDesktop" class="toggle-container">
+            <label class="switch">
+                <input type="checkbox" v-model="isFullscreen" @change="toggleFullscreen">
+                <span class="slider round"></span>
+            </label>
+        </div>
 
         <div v-if="authState === 'checking'">
             <h1>Проверка авторизации...</h1>

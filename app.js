@@ -11,16 +11,17 @@ const app = Vue.createApp({
             checkAuthWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/check-auth',
             loginWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/login',
             isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
-            isFullscreen: false
+            isFullscreen: false,
+            initialHeight: null
         }
     },
     methods: {
         toggleFullscreen() {
-            if (window.Telegram && window.Telegram.WebApp) {
+            if (this.isDesktop && window.Telegram && window.Telegram.WebApp) {
                 if (this.isFullscreen) {
-                    window.Telegram.WebApp.exitFullscreen();
+                    window.Telegram.WebApp.expand();
                 } else {
-                    window.Telegram.WebApp.requestFullscreen();
+                    window.Telegram.WebApp.setViewport(this.initialHeight);
                 }
             }
         },
@@ -80,13 +81,14 @@ const app = Vue.createApp({
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
             this.checkAuthentication();
-            
-            // На мобильной версии сразу разворачиваем
+
+            this.initialHeight = window.Telegram.WebApp.viewportHeight;
+
             if (!this.isDesktop) {
                 window.Telegram.WebApp.expand();
             }
 
-            // Отслеживание состояния полноэкранного режима
+            this.isFullscreen = window.Telegram.WebApp.isExpanded;
             window.Telegram.WebApp.onEvent('viewportChanged', () => {
                 this.isFullscreen = window.Telegram.WebApp.isExpanded;
             });
