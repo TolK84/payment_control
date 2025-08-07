@@ -15,18 +15,16 @@ const app = Vue.createApp({
             initialHeight: null
         }
     },
-    watch: {
-        isFullscreen(newValue) {
+    methods: {
+        toggleFullscreen() {
             if (this.isDesktop && window.Telegram && window.Telegram.WebApp) {
-                if (newValue) {
-                    window.Telegram.WebApp.expand();
-                } else {
+                if (window.Telegram.WebApp.isExpanded) {
                     window.Telegram.WebApp.setViewport(this.initialHeight);
+                } else {
+                    window.Telegram.WebApp.expand();
                 }
             }
-        }
-    },
-    methods: {
+        },
         async checkAuthentication() {
             try {
                 const response = await fetch(this.checkAuthWebhookUrl, {
@@ -91,6 +89,9 @@ const app = Vue.createApp({
             }
 
             this.isFullscreen = window.Telegram.WebApp.isExpanded;
+            window.Telegram.WebApp.onEvent('viewportChanged', () => {
+                this.isFullscreen = window.Telegram.WebApp.isExpanded;
+            });
         }
     }
 });
