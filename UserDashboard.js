@@ -4,6 +4,8 @@ const UserDashboard = {
       <div v-if="!showingDocumentList">
         <h2>Загрузка счета</h2>
         
+        <p :style="{ color: uploadMessageColor }" v-if="uploadMessage">{{ uploadMessage }}</p>
+
         <div 
           class="drop-zone"
           @dragover.prevent="onDragOver"
@@ -52,7 +54,9 @@ const UserDashboard = {
       documents: [],
       isLoading: false,
       getInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-invoices',
-      isDesktop: window.Telegram.WebApp.platform === 'tdesktop'
+      isDesktop: window.Telegram.WebApp.platform === 'tdesktop',
+      uploadMessage: '',
+      uploadMessageColor: 'green'
     }
   },
   methods: {
@@ -79,9 +83,13 @@ const UserDashboard = {
       }
     },
     takePhoto() {
-      alert('Функция "Сделать фото" в разработке.');
+      this.uploadMessage = 'Функция "Сделать фото" в разработке.';
+      this.uploadMessageColor = 'red';
     },
     async uploadFile(file) {
+      this.uploadMessage = 'Отправка файла...';
+      this.uploadMessageColor = 'black';
+
       const webhookUrl = 'https://h-0084.app.n8n.cloud/webhook/upload-invoice';
       const apiKey = 'super-secret-key-123';
       
@@ -99,12 +107,15 @@ const UserDashboard = {
         });
 
         if (response.ok) {
-          alert('Файл успешно отправлен.');
+          this.uploadMessage = 'Файл успешно отправлен. 👌';
+          this.uploadMessageColor = 'green';
         } else {
-          alert('Ошибка отправки файла.');
+          this.uploadMessage = 'Ошибка отправки файла.';
+          this.uploadMessageColor = 'red';
         }
       } catch (error) {
-        alert('Ошибка сети при отправке файла.');
+        this.uploadMessage = 'Ошибка сети при отправке файла.';
+        this.uploadMessageColor = 'red';
       }
     },
     async fetchDocuments() {
@@ -119,7 +130,8 @@ const UserDashboard = {
           const data = await response.json();
           this.documents = data;
       } catch (error) {
-          alert('Не удалось загрузить документы.');
+          this.uploadMessage = 'Не удалось загрузить документы.';
+          this.uploadMessageColor = 'red';
       } finally {
           this.isLoading = false;
       }
