@@ -1,7 +1,7 @@
 const app = Vue.createApp({
     data() {
         return {
-            authState: 'checking', 
+            authState: 'checking',
             userRole: '',
             login: '',
             password: '',
@@ -10,21 +10,9 @@ const app = Vue.createApp({
             isLoading: false,
             checkAuthWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/check-auth',
             loginWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/login',
-            isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
-            isFullscreen: false,
-            initialHeight: null
-        }
-    },
-    watch: {
-        isFullscreen(newValue) {
-            if (this.isDesktop && window.Telegram && window.Telegram.WebApp) {
-                if (newValue) {
-                    window.Telegram.WebApp.expand();
-                } else {
-                    window.Telegram.WebApp.setViewport(this.initialHeight);
-                }
-            }
-        }
+            isDesktop: false,
+            isFullscreen: false
+        };
     },
     methods: {
         async checkAuthentication() {
@@ -51,7 +39,7 @@ const app = Vue.createApp({
             this.isLoading = true;
             this.message = 'Проверка...';
             this.messageColor = 'black';
-            
+
             try {
                 const response = await fetch(this.loginWebhookUrl, {
                     method: 'POST',
@@ -77,20 +65,36 @@ const app = Vue.createApp({
                 this.messageColor = 'red';
                 this.isLoading = false;
             }
+        },
+        async toggleFullscreen() {
+            try {
+                const viewport = window.Telegram.WebApp.viewport;
+                if (this.isFullscreen && viewport.exitFullscreen?.isAvailable()) {
+                    await viewport.exitFullscreen();
+                } else if (!this.isFullscreen && viewport.requestFullscreen?.isAvailable()) {
+                    await viewport.requestFullscreen();
+                }
+            } catch (err) {
+                console.warn('Ошибка при переключении fullscreen:', err);
+            }
+        },
+        updateFullscreenStatus() {
+            this.isFullscreen = window.Telegram.WebApp.viewport.isFullscreen;
         }
     },
     mounted() {
         if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
+            const WebApp = window.Telegram.WebApp;
+
+            WebApp.ready();
+
+            this.isDesktop = WebApp.platform === 'tdesktop';
+            this.updateFullscreenStatus();
+
             this.checkAuthentication();
 
-            this.initialHeight = window.Telegram.WebApp.viewportHeight;
-
-            if (!this.isDesktop) {
-                window.Telegram.WebApp.expand();
-            }
-
-            this.isFullscreen = window.Telegram.WebApp.isExpanded;
+            // Подписка на событие изменения fullscreen
+            WebApp.onEvent('viewportChanged', this.updateFullscreenStatus);
         }
     }
 });
