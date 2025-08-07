@@ -1,7 +1,7 @@
 const app = Vue.createApp({
     data() {
         return {
-            authState: 'checking', 
+            authState: 'checking',
             userRole: '',
             login: '',
             password: '',
@@ -11,18 +11,18 @@ const app = Vue.createApp({
             checkAuthWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/check-auth',
             loginWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/login',
             isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
-            isFullscreen: false,
-            initialHeight: null
-        }
+            isFullscreen: false
+        };
     },
     methods: {
         toggleFullscreen() {
-            if (this.isDesktop && window.Telegram && window.Telegram.WebApp) {
-                if (window.Telegram.WebApp.isExpanded) {
-                    window.Telegram.WebApp.setViewport(this.initialHeight);
-                } else {
-                    window.Telegram.WebApp.expand();
-                }
+            const tg = window.Telegram?.WebApp;
+            if (!tg) return;
+
+            if (this.isFullscreen) {
+                tg.exitFullscreen();
+            } else {
+                tg.requestFullscreen();
             }
         },
         async checkAuthentication() {
@@ -49,7 +49,7 @@ const app = Vue.createApp({
             this.isLoading = true;
             this.message = 'Проверка...';
             this.messageColor = 'black';
-            
+
             try {
                 const response = await fetch(this.loginWebhookUrl, {
                     method: 'POST',
@@ -78,21 +78,17 @@ const app = Vue.createApp({
         }
     },
     mounted() {
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
-            this.checkAuthentication();
+        const tg = window.Telegram?.WebApp;
+        if (!tg) return;
 
-            this.initialHeight = window.Telegram.WebApp.viewportHeight;
+        tg.ready();
+        this.checkAuthentication();
 
-            if (!this.isDesktop) {
-                window.Telegram.WebApp.expand();
-            }
+        this.isFullscreen = tg.isFullscreen;
 
-            this.isFullscreen = window.Telegram.WebApp.isExpanded;
-            window.Telegram.WebApp.onEvent('viewportChanged', () => {
-                this.isFullscreen = window.Telegram.WebApp.isExpanded;
-            });
-        }
+        tg.onEvent('viewportChanged', () => {
+            this.isFullscreen = tg.isFullscreen;
+        });
     }
 });
 
