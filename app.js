@@ -18,10 +18,10 @@ const app = Vue.createApp({
     methods: {
         toggleFullscreen() {
             if (this.isDesktop && window.Telegram && window.Telegram.WebApp) {
-                if (this.isFullscreen) {
-                    window.Telegram.WebApp.expand();
-                } else {
+                if (window.Telegram.WebApp.isExpanded) {
                     window.Telegram.WebApp.setViewport(this.initialHeight);
+                } else {
+                    window.Telegram.WebApp.expand();
                 }
             }
         },
