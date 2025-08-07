@@ -16,6 +16,7 @@
     <div id="app">
         <!-- Переключатель полноэкранного режима -->
         <div v-if="isDesktop" class="toggle-container">
+            <span class="toggle-label">Полноэкранный режим</span>
             <label class="switch">
                 <input type="checkbox" v-model="isFullscreen" @change="toggleFullscreen">
                 <span class="slider round"></span>

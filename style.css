@@ -249,11 +249,23 @@ input[type="password"] {
 /* Переключатель полноэкранного режима */
 .toggle-container {
     position: absolute;
-    top: 10px;
+    top: 60px; /* Смещение ниже крестика */
     right: 10px;
     z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 6px 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
+.toggle-label {
+    font-size: 14px;
+}
+
+/* Тоггл */
 .switch {
     position: relative;
     display: inline-block;
@@ -290,7 +302,7 @@ input[type="password"] {
 }
 
 input:checked + .slider {
-    background-color: var(--tg-theme-button-color);
+    background-color: var(--tg-theme-button-color, #4caf50);
 }
 
 input:checked + .slider:before {
