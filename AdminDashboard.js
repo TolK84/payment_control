@@ -146,7 +146,8 @@ const AdminDashboard = {
         if (this.googleSheetUrl && this.googleSheetUrl !== 'https://docs.google.com/spreadsheets/d/1GkpFQ275xwCdeKTZ1BaWDL7PVD4L_lz-PyjRDmp4z8Q/edit?gid=191092465#gid=191092465') {
             Telegram.WebApp.openLink(this.googleSheetUrl);
         } else {
-            alert('URL Google Таблицы не настроен.');
+            this.uploadMessage = 'URL Google Таблицы не настроен.';
+            this.uploadMessageColor = 'red';
         }
     }
   }
