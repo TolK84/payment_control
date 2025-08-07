@@ -271,4 +271,9 @@ input:checked + .slider:before {
     padding-top: 40px; /* Добавьте отступ сверху ко всему разделу */
 }
 
+.checking-state {
+    padding-top: 140px;
+}
+
+
 
