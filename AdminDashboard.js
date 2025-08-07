@@ -56,7 +56,7 @@ const AdminDashboard = {
       showingDocumentList: false,
       documents: [],
       isLoading: false,
-      getAllInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-invoices',
+      getAllInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-all-invoices',
       googleSheetUrl: 'https://docs.google.com/spreadsheets/d/1GkpFQ275xwCdeKTZ1BaWDL7PVD4L_lz-PyjRDmp4z8Q/edit?gid=0#gid=0',
       isDesktop: window.Telegram.WebApp.platform === 'tdesktop'
     }
@@ -87,8 +87,31 @@ const AdminDashboard = {
     takePhoto() {
       alert('Функция "Сделать фото" в разработке.');
     },
-    uploadFile(file) {
-      alert('Отправка файла: ' + file.name);
+    async uploadFile(file) {
+      const webhookUrl = 'https://h-0084.app.n8n.cloud/webhook/upload-invoice';
+      const apiKey = 'super-secret-key-123';
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('tg_data', window.Telegram.WebApp.initData);
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'X-N8N-API-Key': apiKey,
+          },
+          body: formData,
+        });
+
+        if (response.ok) {
+          alert('Файл успешно отправлен.');
+        } else {
+          alert('Ошибка отправки файла.');
+        }
+      } catch (error) {
+        alert('Ошибка сети при отправке файла.');
+      }
     },
     async fetchDocuments() {
       this.showingDocumentList = true;
