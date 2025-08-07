@@ -27,7 +27,10 @@
     </div>
 
     <div v-if="authState === 'checking'">
-      <h1>Проверка авторизации...</h1>
+      <div v-if="authState === 'checking'" class="checking-state">
+  <h1>Проверка авторизации...</h1>
+</div>
+
     </div>
 
     <form v-if="authState === 'unauthenticated'" @submit.prevent="processLogin">
