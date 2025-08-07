@@ -246,31 +246,39 @@ input[type="password"] {
     box-sizing: border-box;
 }
 
-/* Переключатель полноэкранного режима */
+/* Общие стили тоггла */
 .toggle-container {
     position: absolute;
-    top: 60px; /* Смещение ниже крестика */
     right: 10px;
     z-index: 9999;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: rgba(255, 255, 255, 0.9);
-    padding: 6px 10px;
+    padding: 4px 8px;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.toggle-label {
-    font-size: 14px;
+.toggle-container.windowed {
+    top: 10px; /* В обычном режиме – ближе к верху */
 }
 
-/* Тоггл */
+.toggle-container.fullscreen {
+    top: 60px; /* В фуллскрине – смещено ниже */
+}
+
+/* Подпись */
+.toggle-label {
+    font-size: 12px;
+}
+
+/* Миниатюрный тоггл */
 .switch {
     position: relative;
     display: inline-block;
-    width: 40px;
-    height: 20px;
+    width: 32px;
+    height: 16px;
 }
 
 .switch input {
@@ -293,8 +301,8 @@ input[type="password"] {
 .slider:before {
     position: absolute;
     content: "";
-    height: 16px;
-    width: 16px;
+    height: 12px;
+    width: 12px;
     left: 2px;
     bottom: 2px;
     background-color: white;
@@ -306,11 +314,11 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-    transform: translateX(20px);
+    transform: translateX(16px);
 }
 
 .slider.round {
-    border-radius: 20px;
+    border-radius: 16px;
 }
 
 .slider.round:before {
