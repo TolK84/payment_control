@@ -260,3 +260,14 @@ input:checked + .slider:before {
     flex-direction: column;
     overflow-y: auto;
 }
+
+.section-title {
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+.send-section {
+    padding-top: 40px;
+}
+
+
