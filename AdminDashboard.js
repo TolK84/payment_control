@@ -1,57 +1,50 @@
 const AdminDashboard = {
   template: `
-    <div>
-      <div v-if="!showingDocumentList">
-        <h2>Загрузка счета</h2>
-        
-        <p :style="{ color: uploadMessageColor }" v-if="uploadMessage">{{ uploadMessage }}</p>
+  <div>
+    <p v-if="uploadMessage" :style="{ color: uploadMessageColor, marginBottom: '10px', fontWeight: '500' }">
+      {{ uploadMessage }}
+    </p>
 
-        <div 
-          class="drop-zone"
-          @dragover.prevent="onDragOver"
-          @dragleave.prevent="onDragLeave"
-          @drop.prevent="onDrop"
-          :class="{ 'drag-over': isDragOver }"
-        >
-          <p>Перетащите файл сюда или</p>
-          <button @click="triggerFileInput" class="btn-secondary">+ Добавить файл</button>
-          <input type="file" ref="fileInput" @change="onFileSelect" style="display: none;" accept="image/*,application/pdf">
-        </div>
-        
-        <button v-if="!isDesktop" @click="takePhoto" class="btn-main mt-15">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-          Сделать фото
-        </button>
+    <div v-if="!showingDocumentList">
+      <h2>Отправка на согласование</h2>
+      <p>Выберите файл для отправки:</p>
+
+      <div 
+        class="drop-zone"
+        @dragover.prevent="onDragOver"
+        @dragleave.prevent="onDragLeave"
+        @drop.prevent="onDrop"
+        :class="{ 'drag-over': isDragOver }"
+      >
+        <p>Перетащите файл сюда или</p>
+        <button @click="triggerFileInput" class="btn-secondary">+ Добавить файл</button>
+        <input type="file" ref="fileInput" @change="onFileSelect" style="display: none;" accept="image/*,application/pdf">
       </div>
-
-      <div v-if="showingDocumentList">
-        <h2>Загруженные документы (Все)</h2>
-        
-        <button @click="redirectToGoogleSheet" class="btn-main" style="margin-bottom: 15px;">
-            Перейти в Google Таблицу
-        </button>
-        
-        <div v-if="isLoading">
-          <p>Загрузка...</p>
-        </div>
-        <ul v-else class="doc-list">
-          <li v-for="doc in documents" :key="doc.id">
-            <div>
-                <span class="doc-name">{{ doc.name }}</span>
-                <span class="doc-details">Дата: {{ doc.date }}</span>
-            </div>
-            <span class="doc-amount">{{ doc.amount }} KZT</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="navigation">
-        <button @click="showingDocumentList = false" :class="{ active: !showingDocumentList }">Загрузить</button>
-        <button @click="fetchDocuments" :class="{ active: showingDocumentList }">Посмотреть счета</button>
-      </div>
-
     </div>
-  `,
+
+    <div v-if="showingDocumentList">
+      <h2>Мои отправленные счета</h2>
+      <div v-if="isLoading">
+        <p>Загрузка...</p>
+      </div>
+      <ul v-else class="doc-list">
+        <li v-for="doc in documents" :key="doc.id">
+          <div>
+            <span class="doc-name">{{ doc.name }}</span>
+            <span class="doc-details">Дата: {{ doc.date }}</span>
+          </div>
+          <span class="doc-status" :class="doc.status">{{ statusLabels[doc.status] || doc.status }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="navigation">
+      <button @click="showingDocumentList = false" :class="{ active: !showingDocumentList }">Отправить</button>
+      <button @click="fetchDocuments" :class="{ active: showingDocumentList }">История</button>
+    </div>
+  </div>
+`,
+
   data() {
     return {
       isDragOver: false,
