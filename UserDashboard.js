@@ -27,8 +27,15 @@ const UserDashboard = {
 
       <!-- Камера -->
       <div v-if="!isDesktop" class="camera-container" style="margin-top:15px;">
-        <video ref="video" autoplay playsinline width="320" height="240" style="border-radius: 8px; border: 1px solid #ccc;"></video>
-        <button @click="takePhoto" class="btn-secondary mt-10" style="width:auto;">📷 Сделать снимок</button>
+        <video v-if="!photoTaken" ref="video" autoplay playsinline width="320" height="240" style="border-radius: 8px; border: 1px solid #ccc;"></video>
+        <img v-if="photoTaken" :src="photoDataUrl" alt="Фото" width="320" height="240" style="border-radius: 8px; border: 1px solid #ccc;" />
+        <div style="margin-top: 10px;">
+          <button v-if="!photoTaken" @click="takePhoto" class="btn-secondary" style="width:auto;">📷 Сделать снимок</button>
+          <div v-else>
+            <button @click="confirmPhoto" class="btn-main" style="width:auto; margin-right: 8px;">✅ Подтвердить</button>
+            <button @click="retakePhoto" class="btn-secondary" style="width:auto;">↩ Сделать заново</button>
+          </div>
+        </div>
       </div>
 
       <!-- Список выбранных файлов -->
@@ -101,7 +108,11 @@ const UserDashboard = {
         rejected: 'Отклонен'
       },
       messageTimer: null,
-      stream: null
+      stream: null,
+
+      photoTaken: false,
+      photoDataUrl: null,
+      lastPhotoBlob: null,
     }
   },
 
@@ -151,14 +162,31 @@ const UserDashboard = {
 
       canvas.toBlob(blob => {
         if (blob) {
-          // Создаем файл с уникальным именем
-          const file = new File([blob], `photo_${Date.now()}.png`, { type: 'image/png' });
-          this.filesToUpload.push(file);
-          this.setMessage(`Добавлено фото: ${file.name}`, 'black');
+          this.lastPhotoBlob = blob;
+          this.photoDataUrl = URL.createObjectURL(blob);
+          this.photoTaken = true;
+          this.stopCamera();
         } else {
           this.setMessage('Ошибка создания фото', 'red');
         }
       }, 'image/png');
+    },
+    confirmPhoto() {
+      if (this.lastPhotoBlob) {
+        const file = new File([this.lastPhotoBlob], `photo_${Date.now()}.png`, { type: 'image/png' });
+        this.filesToUpload.push(file);
+        this.setMessage(`Добавлено фото: ${file.name}`, 'black');
+        this.lastPhotoBlob = null;
+        this.photoDataUrl = null;
+        this.photoTaken = false;
+        this.startCamera();
+      }
+    },
+    retakePhoto() {
+      this.lastPhotoBlob = null;
+      this.photoDataUrl = null;
+      this.photoTaken = false;
+      this.startCamera();
     },
     onDragOver() {
       this.isDragOver = true;
