@@ -260,6 +260,8 @@ h1, h2 {
 .toggle-label {
     font-size: 8px;
     line-height: 1;
+    position: relative;
+    top: -2px;
 }
 .switch {
     position: relative;
