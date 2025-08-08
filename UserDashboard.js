@@ -109,7 +109,7 @@ const UserDashboard = {
       mediaStream: null,
     };
   },
-
+  
   methods: {
     setMessage(message, color) {
       this.uploadMessage = message;
@@ -132,10 +132,20 @@ const UserDashboard = {
     triggerFileInput() { this.$refs.fileInput.click(); },
 
     async openCameraFullScreen() {
+      // Если mediaStream уже есть, просто показываем камеру.
+      if (this.mediaStream) {
+        this.cameraActive = true;
+        this.$nextTick(() => {
+          this.$refs.video.srcObject = this.mediaStream;
+        });
+        return;
+      }
+
+      // Если mediaStream ещё нет, запрашиваем его у браузера.
+      // Это вызовет запрос разрешения только в первый раз.
       try {
-        if (!this.mediaStream) {
-          this.mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-        }
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        this.mediaStream = stream;
         this.cameraActive = true;
         this.$nextTick(() => {
           this.$refs.video.srcObject = this.mediaStream;
@@ -162,13 +172,11 @@ const UserDashboard = {
     },
 
     closeCamera() {
-      if (this.mediaStream) {
-        this.mediaStream.getTracks().forEach(track => track.stop());
-        this.mediaStream = null;
-      }
+      // Здесь мы просто скрываем модальное окно. 
+      // mediaStream остается активным, пока открыто приложение.
       this.cameraActive = false;
     },
-
+    
     onFileSelect(event) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
