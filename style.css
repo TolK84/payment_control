@@ -227,7 +227,7 @@ h1, h2 {
     padding: 15px;
     background: none;
     border: none;
-    font-size: 16px;
+    font-size: 14px;
     color: #888;
     cursor: pointer;
     border-bottom: 3px solid transparent;
@@ -235,7 +235,7 @@ h1, h2 {
 
 .navigation button.active {
     color: var(--tg-theme-button-color);
-    border-bottom-color: var(--tg-theme-button-color);
+    border-color: var(--tg-theme-button-color);
 }
 
 /* Тоггл */
@@ -261,7 +261,7 @@ h1, h2 {
     font-size: 8px;
     line-height: 1;
     position: relative;
-    top: -10px;
+    top: -5px;
 }
 .switch {
     position: relative;
