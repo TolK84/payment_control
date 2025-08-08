@@ -72,7 +72,7 @@ const UserDashboard = {
     </div>
 
     <div class="navigation">
-      <button @click="showingDocumentList = false; cameraActive = false" :class="{ active: !showingDocumentList && !cameraActive }">Отправить</button>
+      <button @click="showingDocumentList = false; closeCamera()" :class="{ active: !showingDocumentList && !cameraActive }">Отправить</button>
       <button @click="fetchDocuments" :class="{ active: showingDocumentList }">История</button>
     </div>
 
@@ -109,7 +109,7 @@ const UserDashboard = {
       mediaStream: null,
     };
   },
-  
+
   methods: {
     setMessage(message, color) {
       this.uploadMessage = message;
@@ -132,7 +132,6 @@ const UserDashboard = {
     triggerFileInput() { this.$refs.fileInput.click(); },
 
     async openCameraFullScreen() {
-      // Если mediaStream уже есть, просто показываем камеру.
       if (this.mediaStream) {
         this.cameraActive = true;
         this.$nextTick(() => {
@@ -140,9 +139,6 @@ const UserDashboard = {
         });
         return;
       }
-
-      // Если mediaStream ещё нет, запрашиваем его у браузера.
-      // Это вызовет запрос разрешения только в первый раз.
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
         this.mediaStream = stream;
@@ -172,11 +168,13 @@ const UserDashboard = {
     },
 
     closeCamera() {
-      // Здесь мы просто скрываем модальное окно. 
-      // mediaStream остается активным, пока открыто приложение.
+      if (this.mediaStream) {
+        this.mediaStream.getTracks().forEach(track => track.stop());
+        this.mediaStream = null;
+      }
       this.cameraActive = false;
     },
-    
+
     onFileSelect(event) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
