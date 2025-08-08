@@ -275,5 +275,18 @@ input:checked + .slider:before {
     padding-top: 140px;
 }
 
-
-
+/* Кнопка камеры (видна только на мобильных через условие v-if в шаблоне) */
+.camera-btn {
+  margin-top: 10px;
+  width: 100%;
+  background-color: var(--tg-theme-button-color);
+  color: var(--tg-theme-button-text-color);
+  font-size: 16px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.camera-btn:hover {
+  filter: brightness(0.95);
+}

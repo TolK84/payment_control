@@ -23,6 +23,21 @@ const UserDashboard = {
         <input type="file" ref="fileInput" @change="onFileSelect" style="display: none;" accept="image/*,application/pdf" multiple>
       </div>
 
+      <!-- Кнопка камеры для мобильных (под дроп-зоной) -->
+      <button 
+        v-if="!isDesktop" 
+        @click="triggerCameraInput" 
+        class="btn-secondary mt-15 camera-btn"
+      >📷 Сделать снимок</button>
+      <input 
+        v-if="!isDesktop" 
+        type="file" 
+        ref="cameraInput" 
+        @change="onFileSelect" 
+        style="display: none;" 
+        accept="image/*" 
+        capture="environment">
+
       <ul v-if="filesToUpload.length > 0" class="doc-list mt-15">
         <li v-for="(file, index) in filesToUpload" :key="file.name + index">
           {{ file.name }}
@@ -69,7 +84,7 @@ const UserDashboard = {
       documents: [],
       isLoading: false,
       getInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-invoices',
-      isDesktop: window.Telegram.WebApp.platform === 'tdesktop',
+      isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
       uploadMessage: '',
       uploadMessageColor: 'green',
       filesToUpload: [],
@@ -99,14 +114,20 @@ const UserDashboard = {
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
+    triggerCameraInput() {
+      // Открывает камеру на мобильных (input с capture)
+      this.$refs.cameraInput.click();
+    },
     onFileSelect(event) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         this.addFileToCache(files[i]);
       }
+      // Сброс value чтобы можно было снова выбрать тот же файл/сделать несколько снимков подряд
+      event.target.value = '';
     },
     addFileToCache(file) {
-      // Можно добавить проверку дубликатов, если нужно
+      // Можно добавить проверку дубликатов
       this.filesToUpload.push(file);
       this.uploadMessage = `Добавлен файл: ${file.name}`;
       this.uploadMessageColor = 'black';
