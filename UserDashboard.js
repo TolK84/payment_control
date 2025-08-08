@@ -1,15 +1,18 @@
 const UserDashboard = {
   template: `
   <div>
-    <p v-if="uploadMessage" 
-       :style="{ color: uploadMessageColor, marginBottom: '10px', fontWeight: '500' }">
+    <p v-if="uploadMessage" :style="{ color: uploadMessageColor, marginBottom: '10px', fontWeight: '500' }">
       {{ uploadMessage }}
     </p>
 
-    <div v-if="!showingDocumentList" class="send-section">
+    <div v-if="cameraActive" class="camera-fullscreen">
+      <video ref="video" autoplay playsinline></video>
+      <button @click="takePhoto" class="btn-main shutter-btn">📸 Сделать фото</button>
+      <button @click="closeCamera" class="btn-cancel" style="position: absolute; top: 10px; right: 10px;">✖</button>
+    </div>
 
+    <div v-else-if="!showingDocumentList" class="send-section">
       <h2 class="section-title">Отправка на согласование</h2>
-
       <p>Выберите файл для отправки:</p>
 
       <div 
@@ -21,45 +24,20 @@ const UserDashboard = {
       >
         <p>Перетащите файл сюда или</p>
         <button @click="triggerFileInput" class="btn-secondary">+ Добавить файл</button>
-        <input type="file" ref="fileInput" @change="onFileSelect" 
-               style="display: none;" accept="image/*,application/pdf" multiple>
+        <input type="file" ref="fileInput" @change="onFileSelect" style="display: none;" accept="image/*,application/pdf" multiple>
       </div>
 
-      <!-- Камера -->
-      <div v-if="!isDesktop" class="camera-container" style="margin-top:15px;">
-        <video v-if="!photoTaken" ref="video" autoplay playsinline width="320" height="240" style="border-radius: 8px; border: 1px solid #ccc;"></video>
-        <img v-if="photoTaken" :src="photoDataUrl" alt="Фото" width="320" height="240" style="border-radius: 8px; border: 1px solid #ccc;" />
-        <div style="margin-top: 10px;">
-          <button v-if="!photoTaken" @click="takePhoto" class="btn-secondary" style="width:auto;">📷 Сделать снимок</button>
-          <div v-else>
-            <button @click="confirmPhoto" class="btn-main" style="width:auto; margin-right: 8px;">✅ Подтвердить</button>
-            <button @click="retakePhoto" class="btn-secondary" style="width:auto;">↩ Сделать заново</button>
-          </div>
-        </div>
-      </div>
+      <button v-if="!isDesktop" @click="openCamera" class="btn-secondary mt-15 camera-btn">📷 Сделать снимок</button>
 
-      <!-- Список выбранных файлов -->
       <ul v-if="filesToUpload.length > 0" class="doc-list mt-15">
-        <li v-for="(file, index) in filesToUpload" :key="file.name + index">
-          {{ file.name }}
-        </li>
+        <li v-for="(file, index) in filesToUpload" :key="file.name + index">{{ file.name }}</li>
       </ul>
 
-      <!-- Кнопки отправки и отмены -->
-      <div v-if="filesToUpload.length > 0" class="mt-15" style="display:flex; gap:8px;">
-        <button 
-          @click="sendFiles" 
-          :disabled="isUploading" 
-          class="btn-main"
-          style="flex-grow:1;"
-        >
+      <div v-if="filesToUpload.length > 0" class="mt-15">
+        <button @click="sendFiles" :disabled="isUploading" class="btn-main">
           {{ isUploading ? 'Отправка...' : 'Отправить на согласование' }}
         </button>
-        <button 
-          @click="cancelUpload" 
-          class="btn-cancel"
-          style="padding: 6px 10px; font-size: 14px; background:#eee; border:none; border-radius:8px; cursor:pointer;"
-        >
+        <button @click="cancelUpload" class="btn-cancel" style="margin-left: 8px; padding: 6px 10px; font-size: 14px;">
           ✖
         </button>
       </div>
@@ -67,9 +45,7 @@ const UserDashboard = {
 
     <div v-if="showingDocumentList">
       <h2>Мои отправленные счета</h2>
-      <div v-if="isLoading">
-        <p>Загрузка...</p>
-      </div>
+      <div v-if="isLoading"><p>Загрузка...</p></div>
       <ul v-else class="doc-list">
         <li v-for="doc in documents" :key="doc.id">
           <div>
@@ -95,9 +71,7 @@ const UserDashboard = {
       documents: [],
       isLoading: false,
       getInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-invoices',
-      isDesktop: window.Telegram && window.Telegram.WebApp 
-                 ? window.Telegram.WebApp.platform === 'tdesktop' 
-                 : false,
+      isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
       uploadMessage: '',
       uploadMessageColor: 'green',
       filesToUpload: [],
@@ -108,22 +82,9 @@ const UserDashboard = {
         rejected: 'Отклонен'
       },
       messageTimer: null,
-      stream: null,
-
-      photoTaken: false,
-      photoDataUrl: null,
-      lastPhotoBlob: null,
+      cameraActive: false,
+      mediaStream: null,
     }
-  },
-
-  mounted() {
-    if (!this.isDesktop) {
-      this.startCamera();
-    }
-  },
-
-  beforeUnmount() {
-    this.stopCamera();
   },
 
   methods: {
@@ -134,59 +95,6 @@ const UserDashboard = {
       this.messageTimer = setTimeout(() => {
         this.uploadMessage = '';
       }, 3000);
-    },
-    startCamera() {
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-        .then(stream => {
-          this.stream = stream;
-          this.$refs.video.srcObject = stream;
-        })
-        .catch(err => {
-          this.setMessage('Ошибка доступа к камере', 'red');
-          console.error(err);
-        });
-    },
-    stopCamera() {
-      if (this.stream) {
-        this.stream.getTracks().forEach(track => track.stop());
-        this.stream = null;
-      }
-    },
-    takePhoto() {
-      const video = this.$refs.video;
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth || 320;
-      canvas.height = video.videoHeight || 240;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      canvas.toBlob(blob => {
-        if (blob) {
-          this.lastPhotoBlob = blob;
-          this.photoDataUrl = URL.createObjectURL(blob);
-          this.photoTaken = true;
-          this.stopCamera();
-        } else {
-          this.setMessage('Ошибка создания фото', 'red');
-        }
-      }, 'image/png');
-    },
-    confirmPhoto() {
-      if (this.lastPhotoBlob) {
-        const file = new File([this.lastPhotoBlob], `photo_${Date.now()}.png`, { type: 'image/png' });
-        this.filesToUpload.push(file);
-        this.setMessage(`Добавлено фото: ${file.name}`, 'black');
-        this.lastPhotoBlob = null;
-        this.photoDataUrl = null;
-        this.photoTaken = false;
-        this.startCamera();
-      }
-    },
-    retakePhoto() {
-      this.lastPhotoBlob = null;
-      this.photoDataUrl = null;
-      this.photoTaken = false;
-      this.startCamera();
     },
     onDragOver() {
       this.isDragOver = true;
@@ -203,6 +111,42 @@ const UserDashboard = {
     },
     triggerFileInput() {
       this.$refs.fileInput.click();
+    },
+    openCamera() {
+      if (this.cameraActive) return;
+
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+        .then(stream => {
+          this.mediaStream = stream;
+          this.$refs.video.srcObject = stream;
+          this.cameraActive = true;
+          this.setMessage('Камера активирована', 'black');
+        })
+        .catch(() => {
+          this.setMessage('Не удалось получить доступ к камере', 'red');
+        });
+    },
+    closeCamera() {
+      if (this.mediaStream) {
+        this.mediaStream.getTracks().forEach(track => track.stop());
+        this.mediaStream = null;
+      }
+      this.cameraActive = false;
+    },
+    takePhoto() {
+      const video = this.$refs.video;
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(blob => {
+        const file = new File([blob], `photo_${Date.now()}.jpeg`, { type: 'image/jpeg' });
+        this.addFileToCache(file);
+        this.setMessage('Фото сделано и добавлено', 'green');
+        this.closeCamera();
+      }, 'image/jpeg', 0.95);
     },
     onFileSelect(event) {
       const files = event.target.files;

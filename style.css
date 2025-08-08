@@ -361,3 +361,32 @@ input:checked + .slider:before {
   padding: 0;
   overflow: hidden;
 }
+
+.camera-fullscreen {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.camera-fullscreen video {
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  border-radius: 0;
+  background: black;
+}
+
+.shutter-btn {
+  margin-top: 20px;
+  width: 80%;
+  max-width: 400px;
+  font-size: 20px;
+  background-color: var(--tg-theme-button-color);
+  color: var(--tg-theme-button-text-color);
+  border-radius: 10px;
+}
