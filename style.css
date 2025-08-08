@@ -32,7 +32,6 @@ html, body {
     padding-bottom: 70px; /* Отступ для нижней навигации */
     flex-grow: 1;
     overflow-y: auto;
-    height: 100%;
     box-sizing: border-box;
 }
 
@@ -183,10 +182,8 @@ button:disabled {
 
 /* --- Навигация и Экран Успеха --- */
 .bottom-navigation {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: relative;
+  flex-shrink: 0;
   background-color: var(--tg-theme-bg-color);
   z-index: 100;
 }
