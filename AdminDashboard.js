@@ -9,7 +9,7 @@ const AdminDashboard = {
 
       <h2 class="section-title">Отправка на согласование</h2>
 
-      <p>Выберите файл для отправки:</p>
+      <p class="prompt-text">Выберите файл для отправки:</p>
 
       <div 
         class="drop-zone"

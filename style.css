@@ -31,6 +31,12 @@ html, body {
     box-sizing: border-box;
 }
 
+.prompt-text {
+  font-size: 14px;
+  color: #000000;
+  font-weight: 400;
+}
+
 /* Кнопки */
 button {
     padding: 12px;
