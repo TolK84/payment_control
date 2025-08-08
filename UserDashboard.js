@@ -6,7 +6,7 @@ const UserDashboard = {
       {{ uploadMessage }}
     </p>
 
-    <div v-if="!showingDocumentList && !cameraActive" class="send-section">
+    <div v-if="!showingDocumentList" class="send-section">
 
       <h2 class="section-title">Отправка на согласование</h2>
 
@@ -24,12 +24,6 @@ const UserDashboard = {
         <input type="file" ref="fileInput" @change="onFileSelect" 
                style="display: none;" accept="image/*,application/pdf" multiple>
       </div>
-
-      <button 
-        v-if="!isDesktop" 
-        @click="openCameraFullScreen" 
-        class="btn-secondary mt-15 camera-btn"
-      >📷 Сделать снимок</button>
 
       <ul v-if="filesToUpload.length > 0" class="doc-list mt-15">
         <li v-for="(file, index) in filesToUpload" :key="file.name + index">
@@ -72,14 +66,8 @@ const UserDashboard = {
     </div>
 
     <div class="navigation">
-      <button @click="showingDocumentList = false; closeCamera()" :class="{ active: !showingDocumentList && !cameraActive }">Отправить</button>
+      <button @click="showingDocumentList = false" :class="{ active: !showingDocumentList }">Отправить</button>
       <button @click="fetchDocuments" :class="{ active: showingDocumentList }">История</button>
-    </div>
-
-    <div v-if="cameraActive" class="camera-modal">
-      <video ref="video" autoplay playsinline></video>
-      <button @click="capturePhoto" class="btn-main" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 120px;">Сделать фото</button>
-      <button @click="closeCamera" class="btn-cancel" style="position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; font-size: 24px;">✖</button>
     </div>
   </div>
   `,
@@ -104,9 +92,6 @@ const UserDashboard = {
         rejected: 'Отклонен'
       },
       messageTimer: null,
-      
-      cameraActive: false,
-      mediaStream: null,
     };
   },
 
@@ -130,50 +115,6 @@ const UserDashboard = {
       }
     },
     triggerFileInput() { this.$refs.fileInput.click(); },
-
-    async openCameraFullScreen() {
-      if (this.mediaStream) {
-        this.cameraActive = true;
-        this.$nextTick(() => {
-          this.$refs.video.srcObject = this.mediaStream;
-        });
-        return;
-      }
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-        this.mediaStream = stream;
-        this.cameraActive = true;
-        this.$nextTick(() => {
-          this.$refs.video.srcObject = this.mediaStream;
-        });
-      } catch (error) {
-        this.setMessage('Доступ к камере запрещён или произошла ошибка.', 'red');
-        this.cameraActive = false;
-        this.mediaStream = null;
-      }
-    },
-
-    capturePhoto() {
-      const video = this.$refs.video;
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      canvas.toBlob(blob => {
-        const file = new File([blob], `photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
-        this.addFileToCache(file);
-        this.closeCamera();
-      }, 'image/jpeg', 0.9);
-    },
-
-    closeCamera() {
-      if (this.mediaStream) {
-        this.mediaStream.getTracks().forEach(track => track.stop());
-        this.mediaStream = null;
-      }
-      this.cameraActive = false;
-    },
 
     onFileSelect(event) {
       const files = event.target.files;

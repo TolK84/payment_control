@@ -23,21 +23,6 @@ const AdminDashboard = {
         <input type="file" ref="fileInput" @change="onFileSelect" style="display: none;" accept="image/*,application/pdf" multiple>
       </div>
 
-      <!-- Кнопка камеры для мобильных -->
-      <button 
-        v-if="!isDesktop" 
-        @click="triggerCameraInput" 
-        class="btn-secondary mt-15 camera-btn"
-      >📷 Сделать снимок</button>
-      <input 
-        v-if="!isDesktop" 
-        type="file" 
-        ref="cameraInput" 
-        @change="onFileSelect" 
-        style="display: none;" 
-        accept="image/*" 
-        capture="environment">
-
       <ul v-if="filesToUpload.length > 0" class="doc-list mt-15">
         <li v-for="(file, index) in filesToUpload" :key="file.name + index">
           {{ file.name }}
@@ -128,9 +113,6 @@ const AdminDashboard = {
     },
     triggerFileInput() {
       this.$refs.fileInput.click();
-    },
-    triggerCameraInput() {
-      this.$refs.cameraInput.click();
     },
     onFileSelect(event) {
       const files = event.target.files;
