@@ -23,7 +23,7 @@ const AdminDashboard = {
         <input type="file" ref="fileInput" @change="onFileSelect" style="display: none;" accept="image/*,application/pdf" multiple>
       </div>
 
-      <!-- Кнопка камеры для мобильных (под дроп-зоной) -->
+      <!-- Кнопка камеры для мобильных -->
       <button 
         v-if="!isDesktop" 
         @click="triggerCameraInput" 
@@ -44,14 +44,20 @@ const AdminDashboard = {
         </li>
       </ul>
 
-      <button 
-        v-if="filesToUpload.length > 0" 
-        @click="sendFiles" 
-        :disabled="isUploading" 
-        class="btn-main mt-15"
-      >
-        {{ isUploading ? 'Отправка...' : 'Подтвердить отправку' }}
-      </button>
+      <div v-if="filesToUpload.length > 0" class="mt-15">
+        <button 
+          @click="sendFiles" 
+          :disabled="isUploading" 
+          class="btn-main"
+        >
+          {{ isUploading ? 'Отправка...' : 'Отправить на согласование' }}
+        </button>
+        <button 
+          @click="cancelFiles" 
+          class="btn-cancel"
+          style="margin-left: 10px; font-size: 14px; padding: 6px 10px;"
+        >✖</button>
+      </div>
     </div>
 
     <div v-if="showingDocumentList">
@@ -93,11 +99,20 @@ const AdminDashboard = {
         approved: 'Согласован',
         pending: 'В обработке',
         rejected: 'Отклонен'
-      }
+      },
+      messageTimer: null
     }
   },
 
   methods: {
+    setMessage(message, color = 'black') {
+      this.uploadMessage = message;
+      this.uploadMessageColor = color;
+      clearTimeout(this.messageTimer);
+      this.messageTimer = setTimeout(() => {
+        this.uploadMessage = '';
+      }, 3000);
+    },
     onDragOver() {
       this.isDragOver = true;
     },
@@ -125,17 +140,18 @@ const AdminDashboard = {
       event.target.value = '';
     },
     addFileToCache(file) {
-      // Можно добавить проверку дубликатов, если нужно
       this.filesToUpload.push(file);
-      this.uploadMessage = `Добавлен файл: ${file.name}`;
-      this.uploadMessageColor = 'black';
+      this.setMessage(`Добавлен файл: ${file.name}`, 'black');
+    },
+    cancelFiles() {
+      this.filesToUpload = [];
+      this.setMessage('Отправка отменена', 'red');
     },
     async sendFiles() {
       if (this.filesToUpload.length === 0) return;
 
       this.isUploading = true;
-      this.uploadMessage = 'Отправка файлов...';
-      this.uploadMessageColor = 'black';
+      this.setMessage('Отправка файлов...', 'black');
 
       const webhookUrl = 'https://h-0084.app.n8n.cloud/webhook/upload-invoice';
       const apiKey = 'super-secret-key-123';
@@ -153,21 +169,18 @@ const AdminDashboard = {
           });
 
           if (!response.ok) {
-            this.uploadMessage = `Ошибка отправки файла: ${file.name}`;
-            this.uploadMessageColor = 'red';
+            this.setMessage(`Ошибка отправки файла: ${file.name}`, 'red');
             this.isUploading = false;
             return;
           }
         } catch {
-          this.uploadMessage = `Ошибка сети при отправке файла: ${file.name}`;
-          this.uploadMessageColor = 'red';
+          this.setMessage(`Ошибка сети при отправке файла: ${file.name}`, 'red');
           this.isUploading = false;
           return;
         }
       }
 
-      this.uploadMessage = `Все файлы успешно отправлены. 👌`;
-      this.uploadMessageColor = 'green';
+      this.setMessage(`Все файлы успешно отправлены. 👌`, 'green');
       this.filesToUpload = [];
       this.isUploading = false;
     },
@@ -183,8 +196,7 @@ const AdminDashboard = {
         const data = await response.json();
         this.documents = data;
       } catch (error) {
-        this.uploadMessage = 'Не удалось загрузить документы.';
-        this.uploadMessageColor = 'red';
+        this.setMessage('Не удалось загрузить документы.', 'red');
       } finally {
         this.isLoading = false;
       }

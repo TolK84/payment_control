@@ -33,17 +33,23 @@ html, body {
 
 /* Кнопки */
 button {
-    width: 100%;
     padding: 12px;
     border: none;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
+    user-select: none;
+}
+
+/* Полная ширина кнопок, если не в send-actions */
+button:not(.btn-send):not(.btn-cancel) {
+    width: 100%;
 }
 
 button:disabled {
     background-color: #aaa;
+    cursor: not-allowed;
 }
 
 .btn-main {
@@ -59,6 +65,55 @@ button:disabled {
     background: none;
     color: var(--tg-theme-button-color);
     padding: 8px;
+}
+
+/* Новая обёртка для кнопок отправки и отмены */
+.send-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Кнопка "Отправить на согласование" */
+.btn-send {
+    flex-grow: 1;
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+}
+
+.btn-send:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+/* Кнопка отмены "✖" */
+.btn-cancel {
+    background-color: #e0e0e0;
+    color: #333;
+    border-radius: 8px;
+    width: 48px;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.btn-cancel:hover {
+    background-color: #ccc;
 }
 
 /* Поля ввода */
@@ -262,13 +317,12 @@ input:checked + .slider:before {
 }
 
 .section-title {
-    margin-top: 60px; /* Добавьте отступ сверху */
-    margin-bottom: 15px; /* Или измените отступ снизу */
+    margin-top: 60px;
+    margin-bottom: 15px;
 }
 
-
 .send-section {
-    padding-top: 40px; /* Добавьте отступ сверху ко всему разделу */
+    padding-top: 40px;
 }
 
 .checking-state {
@@ -289,4 +343,21 @@ input:checked + .slider:before {
 }
 .camera-btn:hover {
   filter: brightness(0.95);
+}
+
+/* Плавное скрытие сообщения об аплоаде */
+.upload-message {
+  font-weight: 500;
+  margin-bottom: 10px;
+  transition: opacity 0.5s ease;
+  opacity: 1;
+}
+
+.upload-message.fade-out {
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
