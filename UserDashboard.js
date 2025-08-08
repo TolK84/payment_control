@@ -25,20 +25,11 @@ const UserDashboard = {
                style="display: none;" accept="image/*,application/pdf" multiple>
       </div>
 
-      <!-- Кнопка камеры для мобильных -->
-      <button 
-        v-if="!isDesktop" 
-        @click="triggerCameraInput" 
-        class="btn-secondary mt-15 camera-btn"
-      >📷 Сделать снимок</button>
-      <input 
-        v-if="!isDesktop" 
-        type="file" 
-        ref="cameraInput" 
-        @change="onFileSelect" 
-        style="display: none;" 
-        accept="image/*" 
-        capture>
+      <!-- Камера -->
+      <div v-if="!isDesktop" class="camera-container" style="margin-top:15px;">
+        <video ref="video" autoplay playsinline width="320" height="240" style="border-radius: 8px; border: 1px solid #ccc;"></video>
+        <button @click="takePhoto" class="btn-secondary mt-10" style="width:auto;">📷 Сделать снимок</button>
+      </div>
 
       <!-- Список выбранных файлов -->
       <ul v-if="filesToUpload.length > 0" class="doc-list mt-15">
@@ -48,18 +39,19 @@ const UserDashboard = {
       </ul>
 
       <!-- Кнопки отправки и отмены -->
-      <div v-if="filesToUpload.length > 0" class="mt-15">
+      <div v-if="filesToUpload.length > 0" class="mt-15" style="display:flex; gap:8px;">
         <button 
           @click="sendFiles" 
           :disabled="isUploading" 
           class="btn-main"
+          style="flex-grow:1;"
         >
           {{ isUploading ? 'Отправка...' : 'Отправить на согласование' }}
         </button>
         <button 
           @click="cancelUpload" 
           class="btn-cancel"
-          style="margin-left: 8px; padding: 6px 10px; font-size: 14px;"
+          style="padding: 6px 10px; font-size: 14px; background:#eee; border:none; border-radius:8px; cursor:pointer;"
         >
           ✖
         </button>
@@ -108,8 +100,19 @@ const UserDashboard = {
         pending: 'В обработке',
         rejected: 'Отклонен'
       },
-      messageTimer: null
+      messageTimer: null,
+      stream: null
     }
+  },
+
+  mounted() {
+    if (!this.isDesktop) {
+      this.startCamera();
+    }
+  },
+
+  beforeUnmount() {
+    this.stopCamera();
   },
 
   methods: {
@@ -120,6 +123,42 @@ const UserDashboard = {
       this.messageTimer = setTimeout(() => {
         this.uploadMessage = '';
       }, 3000);
+    },
+    startCamera() {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+        .then(stream => {
+          this.stream = stream;
+          this.$refs.video.srcObject = stream;
+        })
+        .catch(err => {
+          this.setMessage('Ошибка доступа к камере', 'red');
+          console.error(err);
+        });
+    },
+    stopCamera() {
+      if (this.stream) {
+        this.stream.getTracks().forEach(track => track.stop());
+        this.stream = null;
+      }
+    },
+    takePhoto() {
+      const video = this.$refs.video;
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 320;
+      canvas.height = video.videoHeight || 240;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(blob => {
+        if (blob) {
+          // Создаем файл с уникальным именем
+          const file = new File([blob], `photo_${Date.now()}.png`, { type: 'image/png' });
+          this.filesToUpload.push(file);
+          this.setMessage(`Добавлено фото: ${file.name}`, 'black');
+        } else {
+          this.setMessage('Ошибка создания фото', 'red');
+        }
+      }, 'image/png');
     },
     onDragOver() {
       this.isDragOver = true;
@@ -136,9 +175,6 @@ const UserDashboard = {
     },
     triggerFileInput() {
       this.$refs.fileInput.click();
-    },
-    triggerCameraInput() {
-      this.$refs.cameraInput.click();
     },
     onFileSelect(event) {
       const files = event.target.files;
