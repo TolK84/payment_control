@@ -1,91 +1,87 @@
 const UserDashboard = {
   template: `
-    <div>
-      <p v-if="uploadMessage"
-         :style="{ color: uploadMessageColor, marginBottom: '10px', fontWeight: '500' }">
-        {{ uploadMessage }}
-      </p>
+  <div>
+    <p v-if="uploadMessage"
+       :style="{ color: uploadMessageColor, marginBottom: '10px', fontWeight: '500' }">
+      {{ uploadMessage }}
+    </p>
 
-      <div v-if="!showingDocumentList" class="send-section">
+    <div v-if="!showingDocumentList && !cameraActive" class="send-section">
 
-        <h2 class="section-title">Отправка на согласование</h2>
+      <h2 class="section-title">Отправка на согласование</h2>
 
-        <p>Выберите файл для отправки:</p>
+      <p>Выберите файл для отправки:</p>
 
-        <div 
-          class="drop-zone"
-          @dragover.prevent="onDragOver"
-          @dragleave.prevent="onDragLeave"
-          @drop.prevent="onDrop"
-          :class="{ 'drag-over': isDragOver }"
-        >
-          <p>Перетащите файл сюда или</p>
-          <button @click="triggerFileInput" class="btn-secondary">+ Добавить файл</button>
-          <input type="file" ref="fileInput" @change="onFileSelect" 
-                 style="display: none;" accept="image/*,application/pdf" multiple>
-        </div>
+      <div 
+        class="drop-zone"
+        @dragover.prevent="onDragOver"
+        @dragleave.prevent="onDragLeave"
+        @drop.prevent="onDrop"
+        :class="{ 'drag-over': isDragOver }"
+      >
+        <p>Перетащите файл сюда или</p>
+        <button @click="triggerFileInput" class="btn-secondary">+ Добавить файл</button>
+        <input type="file" ref="fileInput" @change="onFileSelect" 
+               style="display: none;" accept="image/*,application/pdf" multiple>
+      </div>
 
-        <!-- Кнопка камеры для мобильных -->
+      <button 
+        v-if="!isDesktop" 
+        @click="openCameraFullScreen" 
+        class="btn-secondary mt-15 camera-btn"
+      >📷 Сделать снимок</button>
+
+      <ul v-if="filesToUpload.length > 0" class="doc-list mt-15">
+        <li v-for="(file, index) in filesToUpload" :key="file.name + index">
+          {{ file.name }}
+        </li>
+      </ul>
+
+      <div v-if="filesToUpload.length > 0" class="mt-15">
         <button 
-          v-if="!isDesktop" 
-          @click="openCameraFullScreen" 
-          class="btn-secondary mt-15 camera-btn"
-        >📷 Сделать снимок</button>
-
-        <!-- Список выбранных файлов -->
-        <ul v-if="filesToUpload.length > 0" class="doc-list mt-15">
-          <li v-for="(file, index) in filesToUpload" :key="file.name + index">
-            {{ file.name }}
-          </li>
-        </ul>
-
-        <!-- Кнопки отправки и отмены -->
-        <div v-if="filesToUpload.length > 0" class="mt-15">
-          <button 
-            @click="sendFiles" 
-            :disabled="isUploading" 
-            class="btn-main"
-          >
-            {{ isUploading ? 'Отправка...' : 'Отправить на согласование' }}
-          </button>
-          <button 
-            @click="cancelUpload" 
-            class="btn-cancel"
-            style="margin-left: 8px; padding: 6px 10px; font-size: 14px;"
-          >
-            ✖
-          </button>
-        </div>
-      </div>
-
-      <div v-if="showingDocumentList">
-        <h2>Мои отправленные счета</h2>
-        <div v-if="isLoading">
-          <p>Загрузка...</p>
-        </div>
-        <ul v-else class="doc-list">
-          <li v-for="doc in documents" :key="doc.id">
-            <div>
-              <span class="doc-name">{{ doc.name }}</span>
-              <span class="doc-details">Дата: {{ doc.date }}</span>
-            </div>
-            <span class="doc-status" :class="doc.status">{{ statusLabels[doc.status] || doc.status }}</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="navigation">
-        <button @click="showingDocumentList = false" :class="{ active: !showingDocumentList }">Отправить</button>
-        <button @click="fetchDocuments" :class="{ active: showingDocumentList }">История</button>
-      </div>
-
-      <!-- Полноэкранный модал для камеры -->
-      <div v-if="cameraActive" class="camera-modal">
-        <video ref="video" autoplay playsinline></video>
-        <button @click="capturePhoto" class="btn-main" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 120px;">Сделать фото</button>
-        <button @click="closeCamera" class="btn-cancel" style="position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; font-size: 24px;">✖</button>
+          @click="sendFiles" 
+          :disabled="isUploading" 
+          class="btn-main"
+        >
+          {{ isUploading ? 'Отправка...' : 'Отправить на согласование' }}
+        </button>
+        <button 
+          @click="cancelUpload" 
+          class="btn-cancel"
+          style="margin-left: 8px; padding: 6px 10px; font-size: 14px;"
+        >
+          ✖
+        </button>
       </div>
     </div>
+
+    <div v-if="showingDocumentList">
+      <h2>Мои отправленные счета</h2>
+      <div v-if="isLoading">
+        <p>Загрузка...</p>
+      </div>
+      <ul v-else class="doc-list">
+        <li v-for="doc in documents" :key="doc.id">
+          <div>
+            <span class="doc-name">{{ doc.name }}</span>
+            <span class="doc-details">Дата: {{ doc.date }}</span>
+          </div>
+          <span class="doc-status" :class="doc.status">{{ statusLabels[doc.status] || doc.status }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="navigation">
+      <button @click="showingDocumentList = false; cameraActive = false" :class="{ active: !showingDocumentList && !cameraActive }">Отправить</button>
+      <button @click="fetchDocuments" :class="{ active: showingDocumentList }">История</button>
+    </div>
+
+    <div v-if="cameraActive" class="camera-modal">
+      <video ref="video" autoplay playsinline></video>
+      <button @click="capturePhoto" class="btn-main" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 120px;">Сделать фото</button>
+      <button @click="closeCamera" class="btn-cancel" style="position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; font-size: 24px;">✖</button>
+    </div>
+  </div>
   `,
 
   data() {
@@ -108,10 +104,9 @@ const UserDashboard = {
         rejected: 'Отклонен'
       },
       messageTimer: null,
-
+      
       cameraActive: false,
       mediaStream: null,
-      cameraPermissionAsked: false,
     };
   },
 
@@ -136,35 +131,22 @@ const UserDashboard = {
     },
     triggerFileInput() { this.$refs.fileInput.click(); },
 
-    // Открытие камеры во весь экран
     async openCameraFullScreen() {
-      if (!this.cameraPermissionAsked) {
-        try {
-          this.mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-          this.cameraPermissionAsked = true;
-        } catch {
-          this.setMessage('Доступ к камере запрещён', 'red');
-          return;
-        }
-      } else {
-        // Повторно получить стрим если был закрыт
+      try {
         if (!this.mediaStream) {
-          try {
-            this.mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-          } catch {
-            this.setMessage('Доступ к камере запрещён', 'red');
-            return;
-          }
+          this.mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
         }
+        this.cameraActive = true;
+        this.$nextTick(() => {
+          this.$refs.video.srcObject = this.mediaStream;
+        });
+      } catch (error) {
+        this.setMessage('Доступ к камере запрещён или произошла ошибка.', 'red');
+        this.cameraActive = false;
+        this.mediaStream = null;
       }
-
-      this.cameraActive = true;
-      this.$nextTick(() => {
-        this.$refs.video.srcObject = this.mediaStream;
-      });
     },
 
-    // Сделать фото
     capturePhoto() {
       const video = this.$refs.video;
       const canvas = document.createElement('canvas');
@@ -179,7 +161,6 @@ const UserDashboard = {
       }, 'image/jpeg', 0.9);
     },
 
-    // Закрыть камеру и остановить поток
     closeCamera() {
       if (this.mediaStream) {
         this.mediaStream.getTracks().forEach(track => track.stop());
@@ -258,4 +239,4 @@ const UserDashboard = {
       }
     }
   }
-}
+};
