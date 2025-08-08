@@ -38,7 +38,7 @@ const UserDashboard = {
         @change="onFileSelect" 
         style="display: none;" 
         accept="image/*" 
-        capture="camera">
+        capture>
 
       <!-- Список выбранных файлов -->
       <ul v-if="filesToUpload.length > 0" class="doc-list mt-15">
