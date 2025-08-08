@@ -7,68 +7,70 @@
     --tg-theme-button-text-color: #ffffff;
 }
 
-/* --- ОСНОВНАЯ РАСКЛАДКА --- */
 html, body {
     height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
     font-family: 'Roboto', sans-serif;
     background-color: var(--tg-theme-bg-color);
     color: var(--tg-theme-text-color);
+    box-sizing: border-box;
 }
 
 #app {
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
 .main-container {
+    padding: 20px;
+    padding-bottom: 70px; /* Отступ для нижней навигации */
     flex-grow: 1;
     overflow-y: auto;
     height: 100%;
+    box-sizing: border-box;
 }
 
-.component-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100%; 
-  box-sizing: border-box;
-}
-
-.scrollable-content {
-  flex-grow: 1;
-  overflow-y: auto;
-}
-
-.content-padding {
-  padding: 20px;
-}
-
-.footer-actions {
-  flex-shrink: 0;
-  background-color: var(--tg-theme-bg-color);
-  z-index: 100;
-}
-
-/* --- ОБЩИЕ ЭЛЕМЕНТЫ --- */
 h1, h2 {
     text-align: center;
     font-size: 18px;
-    margin: 0 0 20px 0;
+    margin-bottom: 20px;
     font-weight: 500;
-}
-
-h2.section-title {
-    margin-top: 20px;
 }
 
 p {
     margin: 0 0 10px 0;
 }
 
-/* --- ФОРМЫ И КНОПКИ --- */
+/* --- Секции и контейнеры --- */
+.checking-state {
+    padding-top: 140px;
+}
+
+.send-section-initial {
+    padding-top: 40px;
+}
+
+.files-selected-view {
+  padding: 60px 20px 80px 20px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+/* --- Формы и кнопки --- */
 .form-group {
     margin-bottom: 15px;
 }
@@ -117,7 +119,7 @@ button:disabled {
     width: auto;
 }
 
-/* --- DRAG & DROP --- */
+/* --- Drag & Drop --- */
 .drop-zone {
     border: 2px dashed #ccc;
     border-radius: 12px;
@@ -137,7 +139,7 @@ button:disabled {
   flex-shrink: 0;
 }
 
-/* --- СПИСКИ --- */
+/* --- Списки --- */
 .doc-list {
     list-style: none;
     padding: 0;
@@ -179,7 +181,16 @@ button:disabled {
   font-size: 14px;
 }
 
-/* --- НАВИГАЦИЯ И ДЕЙСТВИЯ ВНИЗУ --- */
+/* --- Навигация и Экран Успеха --- */
+.bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--tg-theme-bg-color);
+  z-index: 100;
+}
+
 .navigation {
   display: flex;
   border-top: 1px solid #e0e0e0;
@@ -221,14 +232,22 @@ button:disabled {
   width: auto;
 }
 
-/* --- ЭКРАН УСПЕХА --- */
-.success-screen-content {
+.success-screen-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.success-content {
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 100%;
+  padding: 20px;
 }
 
 .success-icon {
@@ -243,11 +262,11 @@ button:disabled {
   color: var(--tg-theme-text-color);
 }
 
-/* --- ТОГГЛ --- */
+/* --- Тоггл --- */
 .toggle-container {
     position: absolute;
-    right: 20px;
-    top: 20px;
+    right: 10px;
+    top: 10px;
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -261,7 +280,7 @@ button:disabled {
     font-size: 8px;
     line-height: 1;
     position: relative;
-    top: -2px;
+    top: -4px;
 }
 .switch {
     position: relative;
@@ -302,10 +321,3 @@ input:checked + .slider:before {
 }
 .slider.round { border-radius: 16px; }
 .slider.round:before { border-radius: 50%; }
-
-/* --- ПРОЧЕЕ --- */
-#message {
-    text-align: center;
-    margin-top: 20px;
-    font-weight: 500;
-}
