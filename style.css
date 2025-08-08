@@ -36,7 +36,7 @@ button {
     padding: 12px;
     border: none;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     user-select: none;
@@ -100,7 +100,7 @@ button:disabled {
     color: #333;
     border-radius: 8px;
     width: 48px;
-    font-size: 20px;
+    font-size: 14px;
     font-weight: 700;
     padding: 0;
     cursor: pointer;
@@ -125,7 +125,7 @@ input[type="file"] {
     border: 1px solid #ccc;
     border-radius: 8px;
     box-sizing: border-box;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 /* Авторизация */
@@ -141,7 +141,7 @@ label {
 
 h1, h2 {
     text-align: center;
-    font-size: 24px;
+    font-size: 18px;
     margin-bottom: 20px;
 }
 
@@ -178,25 +178,25 @@ h1, h2 {
 }
 
 .doc-name {
-    font-size: 16px;
+    font-size: 12px;
 }
 
 .doc-details {
     display: block;
-    font-size: 13px;
+    font-size: 12px;
     color: #888;
     margin-top: 4px;
 }
 
 .doc-amount {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 500;
     white-space: nowrap;
     margin-left: 10px;
 }
 
 .doc-status {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     padding: 4px 8px;
     border-radius: 12px;
