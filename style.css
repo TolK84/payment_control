@@ -390,3 +390,20 @@ input:checked + .slider:before {
   color: var(--tg-theme-button-text-color);
   border-radius: 10px;
 }
+
+.camera-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: black;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.camera-modal video {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+}

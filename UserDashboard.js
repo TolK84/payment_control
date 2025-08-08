@@ -1,67 +1,91 @@
 const UserDashboard = {
   template: `
-  <div>
-    <p v-if="uploadMessage" :style="{ color: uploadMessageColor, marginBottom: '10px', fontWeight: '500' }">
-      {{ uploadMessage }}
-    </p>
+    <div>
+      <p v-if="uploadMessage"
+         :style="{ color: uploadMessageColor, marginBottom: '10px', fontWeight: '500' }">
+        {{ uploadMessage }}
+      </p>
 
-    <div v-if="cameraActive" class="camera-fullscreen">
-      <video ref="video" autoplay playsinline></video>
-      <button @click="takePhoto" class="btn-main shutter-btn">📸 Сделать фото</button>
-      <button @click="closeCamera" class="btn-cancel" style="position: absolute; top: 10px; right: 10px;">✖</button>
-    </div>
+      <div v-if="!showingDocumentList" class="send-section">
 
-    <div v-else-if="!showingDocumentList" class="send-section">
-      <h2 class="section-title">Отправка на согласование</h2>
-      <p>Выберите файл для отправки:</p>
+        <h2 class="section-title">Отправка на согласование</h2>
 
-      <div 
-        class="drop-zone"
-        @dragover.prevent="onDragOver"
-        @dragleave.prevent="onDragLeave"
-        @drop.prevent="onDrop"
-        :class="{ 'drag-over': isDragOver }"
-      >
-        <p>Перетащите файл сюда или</p>
-        <button @click="triggerFileInput" class="btn-secondary">+ Добавить файл</button>
-        <input type="file" ref="fileInput" @change="onFileSelect" style="display: none;" accept="image/*,application/pdf" multiple>
+        <p>Выберите файл для отправки:</p>
+
+        <div 
+          class="drop-zone"
+          @dragover.prevent="onDragOver"
+          @dragleave.prevent="onDragLeave"
+          @drop.prevent="onDrop"
+          :class="{ 'drag-over': isDragOver }"
+        >
+          <p>Перетащите файл сюда или</p>
+          <button @click="triggerFileInput" class="btn-secondary">+ Добавить файл</button>
+          <input type="file" ref="fileInput" @change="onFileSelect" 
+                 style="display: none;" accept="image/*,application/pdf" multiple>
+        </div>
+
+        <!-- Кнопка камеры для мобильных -->
+        <button 
+          v-if="!isDesktop" 
+          @click="openCameraFullScreen" 
+          class="btn-secondary mt-15 camera-btn"
+        >📷 Сделать снимок</button>
+
+        <!-- Список выбранных файлов -->
+        <ul v-if="filesToUpload.length > 0" class="doc-list mt-15">
+          <li v-for="(file, index) in filesToUpload" :key="file.name + index">
+            {{ file.name }}
+          </li>
+        </ul>
+
+        <!-- Кнопки отправки и отмены -->
+        <div v-if="filesToUpload.length > 0" class="mt-15">
+          <button 
+            @click="sendFiles" 
+            :disabled="isUploading" 
+            class="btn-main"
+          >
+            {{ isUploading ? 'Отправка...' : 'Отправить на согласование' }}
+          </button>
+          <button 
+            @click="cancelUpload" 
+            class="btn-cancel"
+            style="margin-left: 8px; padding: 6px 10px; font-size: 14px;"
+          >
+            ✖
+          </button>
+        </div>
       </div>
 
-      <button v-if="!isDesktop" @click="openCamera" class="btn-secondary mt-15 camera-btn">📷 Сделать снимок</button>
+      <div v-if="showingDocumentList">
+        <h2>Мои отправленные счета</h2>
+        <div v-if="isLoading">
+          <p>Загрузка...</p>
+        </div>
+        <ul v-else class="doc-list">
+          <li v-for="doc in documents" :key="doc.id">
+            <div>
+              <span class="doc-name">{{ doc.name }}</span>
+              <span class="doc-details">Дата: {{ doc.date }}</span>
+            </div>
+            <span class="doc-status" :class="doc.status">{{ statusLabels[doc.status] || doc.status }}</span>
+          </li>
+        </ul>
+      </div>
 
-      <ul v-if="filesToUpload.length > 0" class="doc-list mt-15">
-        <li v-for="(file, index) in filesToUpload" :key="file.name + index">{{ file.name }}</li>
-      </ul>
+      <div class="navigation">
+        <button @click="showingDocumentList = false" :class="{ active: !showingDocumentList }">Отправить</button>
+        <button @click="fetchDocuments" :class="{ active: showingDocumentList }">История</button>
+      </div>
 
-      <div v-if="filesToUpload.length > 0" class="mt-15">
-        <button @click="sendFiles" :disabled="isUploading" class="btn-main">
-          {{ isUploading ? 'Отправка...' : 'Отправить на согласование' }}
-        </button>
-        <button @click="cancelUpload" class="btn-cancel" style="margin-left: 8px; padding: 6px 10px; font-size: 14px;">
-          ✖
-        </button>
+      <!-- Полноэкранный модал для камеры -->
+      <div v-if="cameraActive" class="camera-modal">
+        <video ref="video" autoplay playsinline></video>
+        <button @click="capturePhoto" class="btn-main" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 120px;">Сделать фото</button>
+        <button @click="closeCamera" class="btn-cancel" style="position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; font-size: 24px;">✖</button>
       </div>
     </div>
-
-    <div v-if="showingDocumentList">
-      <h2>Мои отправленные счета</h2>
-      <div v-if="isLoading"><p>Загрузка...</p></div>
-      <ul v-else class="doc-list">
-        <li v-for="doc in documents" :key="doc.id">
-          <div>
-            <span class="doc-name">{{ doc.name }}</span>
-            <span class="doc-details">Дата: {{ doc.date }}</span>
-          </div>
-          <span class="doc-status" :class="doc.status">{{ statusLabels[doc.status] || doc.status }}</span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="navigation">
-      <button @click="showingDocumentList = false" :class="{ active: !showingDocumentList }">Отправить</button>
-      <button @click="fetchDocuments" :class="{ active: showingDocumentList }">История</button>
-    </div>
-  </div>
   `,
 
   data() {
@@ -71,7 +95,9 @@ const UserDashboard = {
       documents: [],
       isLoading: false,
       getInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-invoices',
-      isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
+      isDesktop: window.Telegram && window.Telegram.WebApp 
+                 ? window.Telegram.WebApp.platform === 'tdesktop' 
+                 : false,
       uploadMessage: '',
       uploadMessageColor: 'green',
       filesToUpload: [],
@@ -82,9 +108,11 @@ const UserDashboard = {
         rejected: 'Отклонен'
       },
       messageTimer: null,
+
       cameraActive: false,
       mediaStream: null,
-    }
+      cameraPermissionAsked: false,
+    };
   },
 
   methods: {
@@ -96,12 +124,9 @@ const UserDashboard = {
         this.uploadMessage = '';
       }, 3000);
     },
-    onDragOver() {
-      this.isDragOver = true;
-    },
-    onDragLeave() {
-      this.isDragOver = false;
-    },
+
+    onDragOver() { this.isDragOver = true; },
+    onDragLeave() { this.isDragOver = false; },
     onDrop(event) {
       this.isDragOver = false;
       const files = event.dataTransfer.files;
@@ -109,23 +134,52 @@ const UserDashboard = {
         this.addFileToCache(files[i]);
       }
     },
-    triggerFileInput() {
-      this.$refs.fileInput.click();
-    },
-    openCamera() {
-      if (this.cameraActive) return;
+    triggerFileInput() { this.$refs.fileInput.click(); },
 
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-        .then(stream => {
-          this.mediaStream = stream;
-          this.$refs.video.srcObject = stream;
-          this.cameraActive = true;
-          this.setMessage('Камера активирована', 'black');
-        })
-        .catch(() => {
-          this.setMessage('Не удалось получить доступ к камере', 'red');
-        });
+    // Открытие камеры во весь экран
+    async openCameraFullScreen() {
+      if (!this.cameraPermissionAsked) {
+        try {
+          this.mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+          this.cameraPermissionAsked = true;
+        } catch {
+          this.setMessage('Доступ к камере запрещён', 'red');
+          return;
+        }
+      } else {
+        // Повторно получить стрим если был закрыт
+        if (!this.mediaStream) {
+          try {
+            this.mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+          } catch {
+            this.setMessage('Доступ к камере запрещён', 'red');
+            return;
+          }
+        }
+      }
+
+      this.cameraActive = true;
+      this.$nextTick(() => {
+        this.$refs.video.srcObject = this.mediaStream;
+      });
     },
+
+    // Сделать фото
+    capturePhoto() {
+      const video = this.$refs.video;
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(blob => {
+        const file = new File([blob], `photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
+        this.addFileToCache(file);
+        this.closeCamera();
+      }, 'image/jpeg', 0.9);
+    },
+
+    // Закрыть камеру и остановить поток
     closeCamera() {
       if (this.mediaStream) {
         this.mediaStream.getTracks().forEach(track => track.stop());
@@ -133,21 +187,7 @@ const UserDashboard = {
       }
       this.cameraActive = false;
     },
-    takePhoto() {
-      const video = this.$refs.video;
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      canvas.toBlob(blob => {
-        const file = new File([blob], `photo_${Date.now()}.jpeg`, { type: 'image/jpeg' });
-        this.addFileToCache(file);
-        this.setMessage('Фото сделано и добавлено', 'green');
-        this.closeCamera();
-      }, 'image/jpeg', 0.95);
-    },
     onFileSelect(event) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
@@ -218,4 +258,4 @@ const UserDashboard = {
       }
     }
   }
-};
+}
