@@ -11,21 +11,22 @@ const app = Vue.createApp({
             checkAuthWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/check-auth',
             loginWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/login',
             isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
-            isFullscreen: false
+            isFullscreen: false,
+            hasFiles: false
         }
     },
     methods: {
+        handleFilesChanged(count) {
+            this.hasFiles = count > 0;
+        },
         toggleFullscreen() {
             const tg = window.Telegram.WebApp;
-
             if (!tg) return;
-
             if (tg.isFullscreen) {
                 tg.exitFullscreen();
             } else {
                 tg.requestFullscreen();
             }
-
             setTimeout(() => {
                 this.isFullscreen = tg.isFullscreen;
             }, 300);
@@ -38,7 +39,6 @@ const app = Vue.createApp({
                     body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
                 });
                 const result = await response.json();
-
                 if (result.status === 'authenticated') {
                     this.authState = 'authenticated';
                     this.userRole = result.role;
@@ -54,7 +54,6 @@ const app = Vue.createApp({
             this.isLoading = true;
             this.message = 'Проверка...';
             this.messageColor = 'black';
-            
             try {
                 const response = await fetch(this.loginWebhookUrl, {
                     method: 'POST',
@@ -66,7 +65,6 @@ const app = Vue.createApp({
                     })
                 });
                 const result = await response.json();
-
                 if (result.status === 'success') {
                     this.authState = 'authenticated';
                     this.userRole = result.role;
@@ -86,15 +84,11 @@ const app = Vue.createApp({
         if (window.Telegram && window.Telegram.WebApp) {
             const tg = window.Telegram.WebApp;
             tg.ready();
-
             this.checkAuthentication();
-
             if (!this.isDesktop) {
-                tg.requestFullscreen();
+                tg.expand();
             }
-
             this.isFullscreen = tg.isFullscreen;
-
             tg.onEvent('viewportChanged', () => {
                 this.isFullscreen = tg.isFullscreen;
             });

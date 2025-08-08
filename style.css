@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 :root {
     --tg-theme-bg-color: #ffffff;
@@ -7,7 +7,6 @@
     --tg-theme-button-text-color: #ffffff;
 }
 
-/* Общие стили */
 html, body {
     height: 100%;
     width: 100%;
@@ -21,35 +20,85 @@ html, body {
 }
 
 #app {
-    padding: 20px;
     width: 100%;
-    max-width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
     box-sizing: border-box;
 }
 
-.prompt-text {
-  font-size: 12px;
-  color: #000000;
-  font-weight: 400;
+.main-container {
+    padding: 20px;
+    padding-bottom: 70px; /* Отступ для нижней навигации */
+    flex-grow: 1;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-/* Кнопки */
+h1, h2 {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+p {
+    margin: 0 0 10px 0;
+}
+
+/* --- Секции и контейнеры --- */
+.checking-state {
+    padding-top: 140px;
+}
+
+.send-section-initial {
+    padding-top: 40px;
+}
+
+.files-selected-view {
+  padding: 60px 20px 80px 20px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+/* --- Формы и кнопки --- */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
 button {
     padding: 12px;
     border: none;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     user-select: none;
-}
-
-/* Полная ширина кнопок, если не в send-actions */
-button:not(.btn-send):not(.btn-cancel) {
     width: 100%;
 }
 
@@ -61,97 +110,16 @@ button:disabled {
 .btn-main {
     background-color: var(--tg-theme-button-color);
     color: var(--tg-theme-button-text-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
 }
 
 .btn-secondary {
     background: none;
     color: var(--tg-theme-button-color);
     padding: 8px;
+    width: auto;
 }
 
-/* Новая обёртка для кнопок отправки и отмены */
-.send-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-/* Кнопка "Отправить на согласование" */
-.btn-send {
-    flex-grow: 1;
-    background-color: var(--tg-theme-button-color);
-    color: var(--tg-theme-button-text-color);
-    font-weight: 600;
-    border-radius: 8px;
-    padding: 12px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-}
-
-.btn-send:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-}
-
-/* Кнопка отмены "✖" */
-.btn-cancel {
-    background-color: #e0e0e0;
-    color: #333;
-    border-radius: 8px;
-    width: 48px;
-    font-size: 14px;
-    font-weight: 700;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    user-select: none;
-    transition: background-color 0.2s;
-}
-
-.btn-cancel:hover {
-    background-color: #ccc;
-}
-
-/* Поля ввода */
-input[type="text"],
-input[type="password"],
-input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-sizing: border-box;
-    font-size: 12px;
-}
-
-/* Авторизация */
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-}
-
-h1, h2 {
-    text-align: center;
-    font-size: 18px;
-    margin-bottom: 20px;
-}
-
-/* Перетаскивание */
+/* --- Drag & Drop --- */
 .drop-zone {
     border: 2px dashed #ccc;
     border-radius: 12px;
@@ -165,14 +133,17 @@ h1, h2 {
     border-color: var(--tg-theme-button-color);
 }
 
-/* Список документов */
+.drop-zone.compact {
+  padding: 15px 20px;
+  border-style: solid;
+  flex-shrink: 0;
+}
+
+/* --- Списки --- */
 .doc-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    max-height: 60vh;
-    overflow-y: auto;
-    padding-right: 5px;
 }
 
 .doc-list li {
@@ -184,7 +155,7 @@ h1, h2 {
 }
 
 .doc-name {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .doc-details {
@@ -194,32 +165,35 @@ h1, h2 {
     margin-top: 4px;
 }
 
-.doc-amount {
-    font-size: 12px;
-    font-weight: 500;
-    white-space: nowrap;
-    margin-left: 10px;
-}
-
 .doc-status {
     font-size: 12px;
     font-weight: 500;
     padding: 4px 8px;
     border-radius: 12px;
+    white-space: nowrap;
 }
 .doc-status.approved { background-color: #e0f8e0; color: #008000; }
 .doc-status.pending  { background-color: #fff8e0; color: #f39c12; }
 .doc-status.rejected { background-color: #ffe0e0; color: #c0392b; }
 
-/* Навигация */
+.file-status {
+  color: #888;
+  font-size: 14px;
+}
+
+/* --- Навигация и Экран Успеха --- */
+.bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--tg-theme-bg-color);
+  z-index: 100;
+}
+
 .navigation {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    background-color: #f8f8f8;
-    border-top: 1px solid #e0e0e0;
+  display: flex;
+  border-top: 1px solid #e0e0e0;
 }
 
 .navigation button {
@@ -227,7 +201,8 @@ h1, h2 {
     padding: 15px;
     background: none;
     border: none;
-    font-size: 14px;
+    border-radius: 0;
+    font-size: 16px;
     color: #888;
     cursor: pointer;
     border-bottom: 3px solid transparent;
@@ -235,13 +210,63 @@ h1, h2 {
 
 .navigation button.active {
     color: var(--tg-theme-button-color);
-    border-color: var(--tg-theme-button-color);
+    border-bottom-color: var(--tg-theme-button-color);
 }
 
-/* Тоггл */
+.bottom-actions {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.bottom-actions .btn-main {
+  flex-grow: 1;
+}
+
+.btn-cancel-wide {
+  background-color: #e0e0e0;
+  color: #333;
+  padding: 0 20px;
+  border-radius: 8px;
+  width: auto;
+}
+
+.success-screen-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.success-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+.success-message {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--tg-theme-text-color);
+}
+
+/* --- Тоггл --- */
 .toggle-container {
     position: absolute;
     right: 10px;
+    top: 10px;
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -249,19 +274,13 @@ h1, h2 {
     background: rgba(255, 255, 255, 1);
     padding: 4px 8px;
     border-radius: 8px;
-    box-shadow: none !important;
 }
-.toggle-container.windowed {
-    top: 10px;
-}
-.toggle-container.fullscreen {
-    top: 60px;
-}
+
 .toggle-label {
     font-size: 8px;
     line-height: 1;
     position: relative;
-    top: -5px;
+    top: -4px;
 }
 .switch {
     position: relative;
@@ -300,40 +319,5 @@ input:checked + .slider {
 input:checked + .slider:before {
     transform: translateX(16px);
 }
-.slider.round {
-    border-radius: 16px;
-}
-.slider.round:before {
-    border-radius: 50%;
-}
-
-/* Прочее */
-#message {
-    text-align: center;
-    margin-top: 100px;
-    font-weight: 500;
-}
-
-.mt-15 {
-    margin-top: 15px;
-}
-
-.flex-grow {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-}
-
-.section-title {
-    margin-top: 60px;
-    margin-bottom: 15px;
-}
-
-.send-section {
-    padding-top: 40px;
-}
-
-.checking-state {
-    padding-top: 140px;
-}
+.slider.round { border-radius: 16px; }
+.slider.round:before { border-radius: 50%; }

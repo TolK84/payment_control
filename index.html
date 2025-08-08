@@ -4,20 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payment Control</title>
-
   <link rel="stylesheet" href="style.css">
-
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="UserDashboard.js?v=1.1"></script>
-  <script src="AdminDashboard.js"></script>
 </head>
 <body>
   <div id="app">
 
     <div
       :class="['toggle-container', isFullscreen ? 'fullscreen' : 'windowed']"
-      v-if="isDesktop"
+      v-if="isDesktop && !hasFiles"
     >
       <span class="toggle-label">Полноэкранный режим</span>
       <label class="switch">
@@ -26,11 +22,8 @@
       </label>
     </div>
 
-    <div v-if="authState === 'checking'">
-      <div v-if="authState === 'checking'" class="checking-state">
-  <h1>Проверка авторизации...</h1>
-</div>
-
+    <div v-if="authState === 'checking'" class="checking-state">
+      <h1>Проверка авторизации...</h1>
     </div>
 
     <form v-if="authState === 'unauthenticated'" @submit.prevent="processLogin">
@@ -49,13 +42,15 @@
       <p id="message" :style="{ color: messageColor }">{{ message }}</p>
     </form>
 
-    <div v-if="authState === 'authenticated'">
-      <user-dashboard v-if="userRole === 'user'"></user-dashboard>
-      <admin-dashboard v-if="userRole === 'admin'"></admin-dashboard>
+    <div v-if="authState === 'authenticated'" class="main-container">
+      <user-dashboard v-if="userRole === 'user'" @files-changed="handleFilesChanged"></user-dashboard>
+      <admin-dashboard v-if="userRole === 'admin'" @files-changed="handleFilesChanged"></admin-dashboard>
       <div v-if="userRole === 'approver'">Содержимое для согласующего</div>
     </div>
   </div>
 
+  <script src="UserDashboard.js"></script>
+  <script src="AdminDashboard.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
