@@ -11,8 +11,10 @@ const app = Vue.createApp({
             checkAuthWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/check-auth',
             loginWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/login',
             isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
+            isIOS: window.Telegram && window.Telegram.WebApp ? /iPad|iPhone|iPod/.test(window.Telegram.WebApp.platform) : false,
             isFullscreen: false,
-            hasFiles: false
+            hasFiles: false,
+            viewportHeight: window.innerHeight
         }
     },
     methods: {
@@ -85,12 +87,37 @@ const app = Vue.createApp({
             const tg = window.Telegram.WebApp;
             tg.ready();
             this.checkAuthentication();
-            if (!this.isDesktop) {
+            
+            // Настройка для разных платформ
+            if (this.isIOS) {
+                // Для iOS устанавливаем специальные параметры
+                tg.setViewportHeight(this.viewportHeight);
+                tg.expand();
+                // Принудительно устанавливаем высоту для iOS
+                document.documentElement.style.setProperty('--tg-viewport-height', `${this.viewportHeight}px`);
+            } else if (!this.isDesktop) {
+                // Для остальных мобильных платформ
                 tg.expand();
             }
+
             this.isFullscreen = tg.isFullscreen;
+            
+            // Обработчик изменения viewport
             tg.onEvent('viewportChanged', () => {
                 this.isFullscreen = tg.isFullscreen;
+                if (this.isIOS) {
+                    this.viewportHeight = window.innerHeight;
+                    document.documentElement.style.setProperty('--tg-viewport-height', `${this.viewportHeight}px`);
+                }
+            });
+
+            // Обработчик изменения размера окна
+            window.addEventListener('resize', () => {
+                if (this.isIOS) {
+                    this.viewportHeight = window.innerHeight;
+                    document.documentElement.style.setProperty('--tg-viewport-height', `${this.viewportHeight}px`);
+                    tg.setViewportHeight(this.viewportHeight);
+                }
             });
         }
     }
