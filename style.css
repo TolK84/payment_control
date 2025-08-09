@@ -70,6 +70,21 @@ p {
   padding: 10px 0;
 }
 
+.comment-area {
+  margin: 15px 0;
+}
+
+.comment-area textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 80px;
+}
+
 /* --- Формы и кнопки --- */
 .form-group {
     margin-bottom: 15px;

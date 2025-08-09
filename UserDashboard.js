@@ -31,6 +31,12 @@ const UserDashboard = {
         </div>
         <div class="content-area">
           <p v-if="uploadMessage" :style="{ color: uploadMessageColor, textAlign: 'center' }">{{ uploadMessage }}</p>
+          <div class="comment-area">
+            <textarea 
+              v-model="uploadComment" 
+              placeholder="Добавьте комментарий к отправляемым файлам..."
+            ></textarea>
+          </div>
           <ul class="doc-list">
             <li v-for="(file, index) in filesToUpload" :key="file.name + index">
               <span>{{ file.name }}</span>
@@ -96,6 +102,7 @@ const UserDashboard = {
       messageTimer: null,
       showSuccessScreen: false,
       sentFilesCount: 0,
+      uploadComment: '',
     };
   },
 
@@ -141,6 +148,7 @@ const UserDashboard = {
       for (const file of this.filesToUpload) {
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('comment', this.uploadComment);
         formData.append('tg_data', window.Telegram.WebApp.initData);
         try {
           const response = await fetch(webhookUrl, { method: 'POST', headers: { 'X-N8N-API-Key': apiKey }, body: formData });
