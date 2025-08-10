@@ -71,7 +71,7 @@ const UserDashboard = {
           <path fill="none" stroke="#FFFFFF" stroke-width="3" d="M14 27l5.917 5.917L38 18"/>
         </svg>
         <p class="success-message">
-          {{ sentFilesCount }} счета успешно отправлены на согласование
+          {{ getSuccessMessage() }}
         </p>
       </div>
       <div class="bottom-navigation">
@@ -107,6 +107,27 @@ const UserDashboard = {
   },
 
   methods: {
+    getSuccessMessage() {
+      const count = this.sentFilesCount;
+      let word = '';
+      
+      if (count === 1) {
+        word = 'счет';
+      } else if (count >= 2 && count <= 4) {
+        word = 'счета';
+      } else {
+        word = 'счетов';
+      }
+      
+      let verb = '';
+      if (count === 1) {
+        verb = 'успешно отправлен';
+      } else {
+        verb = 'успешно отправлены';
+      }
+      
+      return `${count} ${word} ${verb} на согласование`;
+    },
     closeSuccessScreen() {
       this.showSuccessScreen = false;
       this.sentFilesCount = 0;
