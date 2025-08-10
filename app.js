@@ -1,3 +1,4 @@
+// filepath: d:\Git\payment_control\app.js
 const app = Vue.createApp({
     data() {
         return {
@@ -18,6 +19,23 @@ const app = Vue.createApp({
     methods: {
         handleFilesChanged(count) {
             this.hasFiles = count > 0;
+        },
+        adjustBottomPadding() {
+            const tg = window.Telegram.WebApp;
+            if (!tg) return;
+
+            const platform = tg.platform;
+            const bottomNav = document.querySelector('.bottom-navigation');
+            
+            if (bottomNav) {
+                if (platform === 'ios') {
+                    bottomNav.style.bottom = '50px';
+                } else if (platform === 'tdesktop' || platform === 'weba' || platform === 'webk') {
+                    bottomNav.style.bottom = '50px';
+                } else {
+                    bottomNav.style.bottom = '40px';
+                }
+            }
         },
         toggleFullscreen() {
             const tg = window.Telegram.WebApp;
@@ -92,6 +110,9 @@ const app = Vue.createApp({
             tg.onEvent('viewportChanged', () => {
                 this.isFullscreen = tg.isFullscreen;
             });
+
+            // Динамическая корректировка отступов для разных платформ
+            setTimeout(() => this.adjustBottomPadding(), 100);
         }
     }
 });

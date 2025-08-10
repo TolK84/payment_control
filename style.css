@@ -15,6 +15,7 @@ html, body {
     overflow: hidden;
     font-family: 'Roboto', sans-serif;
     background-color: var(--tg-theme-bg-color);
+
     color: var(--tg-theme-text-color);
     box-sizing: border-box;
 }
@@ -29,7 +30,7 @@ html, body {
 
 .main-container {
     padding: 20px;
-    padding-bottom: 90px; /* Увеличиваем отступ для поднятой навигации */
+    padding-bottom: 120px; /* Увеличиваем отступ для поднятой навигации */
     flex-grow: 1;
     overflow-y: auto;
     height: 100%;
@@ -123,8 +124,17 @@ button:disabled {
 }
 
 .btn-main {
-    background-color: var(--tg-theme-button-color);
+    background: linear-gradient(135deg, var(--tg-theme-button-color), rgba(0, 123, 255, 0.8));
     color: var(--tg-theme-button-text-color);
+    border-radius: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px rgba(0, 123, 255, 0.3);
+}
+
+.btn-main:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 123, 255, 0.4);
 }
 
 .btn-secondary {
@@ -199,40 +209,73 @@ button:disabled {
 /* --- Навигация и Экран Успеха --- */
 .bottom-navigation {
   position: fixed;
-  bottom: 20px;
-  left: 0;
-  right: 0;
+  bottom: max(40px, env(safe-area-inset-bottom));
+  left: 10px;
+  right: 10px;
   background-color: var(--tg-theme-bg-color);
   z-index: 100;
+  margin-bottom: 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .navigation {
   display: flex;
-  border-top: 1px solid #e0e0e0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
 }
 
 .navigation button {
     flex: 1;
-    padding: 15px;
+    padding: 16px 20px;
     background: none;
     border: none;
     border-radius: 0;
-    font-size: 16px;
-    color: #888;
+    font-size: 15px;
+    font-weight: 500;
+    color: #666;
     cursor: pointer;
-    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.navigation button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--tg-theme-button-color), rgba(0, 123, 255, 0.8));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
 }
 
 .navigation button.active {
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.navigation button.active::before {
+    opacity: 1;
+}
+
+.navigation button:hover:not(.active) {
     color: var(--tg-theme-button-color);
-    border-bottom-color: var(--tg-theme-button-color);
+    background: rgba(0, 123, 255, 0.05);
 }
 
 .bottom-actions {
   display: flex;
-  gap: 10px;
-  padding: 10px;
-  border-top: 1px solid #e0e0e0;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
 }
 
 .bottom-actions .btn-main {
@@ -240,11 +283,20 @@ button:disabled {
 }
 
 .btn-cancel-wide {
-  background-color: #e0e0e0;
-  color: #333;
-  padding: 0 20px;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  color: #495057;
+  padding: 12px 24px;
+  border-radius: 12px;
   width: auto;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.btn-cancel-wide:hover {
+  background: linear-gradient(135deg, #e9ecef, #dee2e6);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .success-screen-container {
@@ -336,3 +388,23 @@ input:checked + .slider:before {
 }
 .slider.round { border-radius: 16px; }
 .slider.round:before { border-radius: 50%; }
+
+/* Дополнительные отступы для разных платформ */
+@supports (bottom: env(safe-area-inset-bottom)) {
+  .bottom-navigation {
+    bottom: max(40px, calc(env(safe-area-inset-bottom) + 40px));
+  }
+  .main-container {
+    padding-bottom: max(120px, calc(env(safe-area-inset-bottom) + 120px));
+  }
+}
+
+/* Для веб-версии и десктопных приложений */
+@media screen and (min-width: 768px) {
+  .bottom-navigation {
+    bottom: 50px;
+  }
+  .main-container {
+    padding-bottom: 130px;
+  }
+}
