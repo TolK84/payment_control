@@ -158,6 +158,7 @@ const UserDashboard = {
     },
     cancelUpload() {
       this.filesToUpload = [];
+      this.uploadComment = ''; // Очищаем комментарий при отмене
       this.setMessage('Загрузка отменена', 'red');
       this.$emit('files-changed', this.filesToUpload.length);
     },
@@ -182,6 +183,7 @@ const UserDashboard = {
       }
       this.sentFilesCount = this.filesToUpload.length;
       this.filesToUpload = [];
+      this.uploadComment = ''; // Очищаем комментарий после отправки
       this.isUploading = false;
       this.showSuccessScreen = true;
     },
