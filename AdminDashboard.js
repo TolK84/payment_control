@@ -101,7 +101,7 @@ const AdminDashboard = {
       showingDocumentList: false,
       documents: [],
       isLoading: false,
-      getAllInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-all-invoices',
+      getAllInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-invoices',
       uploadMessage: '',
       uploadMessageColor: 'green',
       filesToUpload: [],

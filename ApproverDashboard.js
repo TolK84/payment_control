@@ -202,7 +202,7 @@ const ApproverDashboard = {
       sentFilesCount: 0,
       // API URLs
       getPendingInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-pending-invoices',
-      getAllInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-all-invoices',
+      getAllInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-invoices',
       submitDecisionWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/submit-decision',
       statusLabels: {
         approved: 'Согласован',
@@ -215,12 +215,8 @@ const ApproverDashboard = {
 
   computed: {
     pendingDocuments() {
-      // Показываем только документы, которые еще не рассмотрены этим согласующим
-      return this.documents.filter(doc => {
-        const myStatusField = `Статус ${this.approverName}`;
-        const myStatus = doc[myStatusField] || '';
-        return myStatus === ''; // Только документы без статуса от этого согласующего
-      });
+      // Показываем все документы, бэкенд сам отфильтрует нужные для текущего аппрувера
+      return this.documents || [];
     }
   },
 
@@ -362,16 +358,12 @@ const ApproverDashboard = {
     },
     
     getMyStatusText(doc) {
-      const myStatusField = `Статус ${this.approverName}`;
-      const myStatus = doc[myStatusField] || '';
-      return myStatus || 'Не рассмотрено';
+      // Показываем общий статус документа или "Не рассмотрено"
+      return 'Не рассмотрено';
     },
     
     getMyStatusClass(doc) {
-      const myStatusField = `Статус ${this.approverName}`;
-      const myStatus = doc[myStatusField] || '';
-      if (myStatus === 'Согласовано') return 'status-approved';
-      if (myStatus === 'Отказано') return 'status-rejected';
+      // Всегда показываем как pending, так как статус определяется бэкендом
       return 'status-pending';
     },
     
@@ -416,16 +408,18 @@ const ApproverDashboard = {
       
       this.isSubmitting = true;
       try {
+        const requestData = {
+          document_id: this.selectedDocument.id,
+          approver: "approver", // Бэкенд сам определит конкретного аппрувера
+          decision: this.decision,
+          comment: this.comment,
+          tg_data: window.Telegram.WebApp.initData
+        };
+        
         const response = await fetch(this.submitDecisionWebhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            document_id: this.selectedDocument.id,
-            approver: this.approverName,
-            decision: this.decision,
-            comment: this.comment,
-            tg_data: window.Telegram.WebApp.initData
-          })
+          body: JSON.stringify(requestData)
         });
         
         const result = await response.json();
