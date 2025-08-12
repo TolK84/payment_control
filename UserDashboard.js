@@ -11,7 +11,7 @@ const UserDashboard = {
           </div>
         </div>
         <div v-if="showingDocumentList">
-          <h2>Мои отправленные счета</h2>
+          <h2>Статус счетов</h2>
           <div v-if="isLoading"><p>Загрузка...</p></div>
           <ul v-else class="doc-list">
             <li v-for="doc in documents" :key="doc.id">
@@ -19,7 +19,14 @@ const UserDashboard = {
                 <span class="doc-name">{{ doc.name }}</span>
                 <span class="doc-details">Дата: {{ doc.date }}</span>
               </div>
-              <span class="doc-status" :class="doc.status">{{ statusLabels[doc.status] || doc.status }}</span>
+              <div class="status-container">
+                <span class="doc-status" :class="doc.status">{{ statusLabels[doc.status] || doc.status }}</span>
+                <div class="status-indicators">
+                  <div class="status-square" :class="getWorkflowStatus(doc, 'empty')" title="Пустой статус"></div>
+                  <div class="status-square" :class="getWorkflowStatus(doc, 'approved')" title="Есть согласования"></div>
+                  <div class="status-square" :class="getWorkflowStatus(doc, 'rejected')" title="Есть отказы"></div>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
@@ -51,7 +58,7 @@ const UserDashboard = {
       <div class="bottom-navigation">
         <div v-if="filesToUpload.length === 0" class="navigation">
           <button @click="showingDocumentList = false" :class="{ active: !showingDocumentList }">Отправить</button>
-          <button @click="fetchDocuments" :class="{ active: showingDocumentList }">История</button>
+          <button @click="fetchDocuments" :class="{ active: showingDocumentList }">Статус счетов</button>
         </div>
         <div v-else class="bottom-actions">
           <button @click="sendFiles" :disabled="isUploading" class="btn-main">
@@ -127,6 +134,24 @@ const UserDashboard = {
       }
       
       return `${count} ${word} ${verb} на согласование`;
+    },
+    getWorkflowStatus(doc, statusType) {
+      const status1 = doc["Статус Дамели"] || "";
+      const status2 = doc["Статус Даурен Б"] || "";
+      
+      switch(statusType) {
+        case 'empty':
+          // Белый квадратик активен, если хотя бы один статус пустой
+          return (status1 === "" || status2 === "") ? 'status-active-empty' : 'status-inactive';
+        case 'approved':
+          // Зеленый квадратик активен, если хотя бы один статус "Согласовано"
+          return (status1 === "Согласовано" || status2 === "Согласовано") ? 'status-active-approved' : 'status-inactive';
+        case 'rejected':
+          // Красный квадратик активен, если хотя бы один статус "Отказано"
+          return (status1 === "Отказано" || status2 === "Отказано") ? 'status-active-rejected' : 'status-inactive';
+        default:
+          return 'status-inactive';
+      }
     },
     closeSuccessScreen() {
       this.showSuccessScreen = false;

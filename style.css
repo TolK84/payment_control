@@ -179,6 +179,48 @@ button:disabled {
     border-bottom: 1px solid #f0f0f0;
 }
 
+.status-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-indicators {
+    display: flex;
+    gap: 6px;
+}
+
+.status-square {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    border: 1px solid #ddd;
+    transition: all 0.2s ease;
+}
+
+.status-inactive {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+}
+
+.status-active-empty {
+    background-color: #ffffff;
+    border-color: #6c757d;
+    box-shadow: 0 0 0 1px #6c757d;
+}
+
+.status-active-approved {
+    background-color: #28a745;
+    border-color: #28a745;
+    box-shadow: 0 0 0 1px #28a745;
+}
+
+.status-active-rejected {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    box-shadow: 0 0 0 1px #dc3545;
+}
+
 .doc-name {
     font-size: 14px;
 }
