@@ -12,7 +12,6 @@ const app = Vue.createApp({
             checkAuthWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/check-auth',
             loginWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/login',
             isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
-            isFullscreen: false,
             hasFiles: false
         }
     },
@@ -36,18 +35,6 @@ const app = Vue.createApp({
                     bottomNav.style.bottom = '40px';
                 }
             }
-        },
-        toggleFullscreen() {
-            const tg = window.Telegram.WebApp;
-            if (!tg) return;
-            if (tg.isFullscreen) {
-                tg.exitFullscreen();
-            } else {
-                tg.requestFullscreen();
-            }
-            setTimeout(() => {
-                this.isFullscreen = tg.isFullscreen;
-            }, 300);
         },
         async checkAuthentication() {
             try {
@@ -106,10 +93,6 @@ const app = Vue.createApp({
             if (!this.isDesktop) {
                 tg.expand();
             }
-            this.isFullscreen = tg.isFullscreen;
-            tg.onEvent('viewportChanged', () => {
-                this.isFullscreen = tg.isFullscreen;
-            });
 
             // Динамическая корректировка отступов для разных платформ
             setTimeout(() => this.adjustBottomPadding(), 100);

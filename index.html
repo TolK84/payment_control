@@ -11,17 +11,6 @@
 <body>
   <div id="app">
 
-    <div
-      :class="['toggle-container', isFullscreen ? 'fullscreen' : 'windowed']"
-      v-if="isDesktop && !hasFiles"
-    >
-      <span class="toggle-label">Полноэкранный режим</span>
-      <label class="switch">
-        <input type="checkbox" v-model="isFullscreen" @change="toggleFullscreen">
-        <span class="slider round"></span>
-      </label>
-    </div>
-
     <div v-if="authState === 'checking'" class="checking-state">
       <h1>Проверка авторизации...</h1>
     </div>
