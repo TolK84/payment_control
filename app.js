@@ -102,5 +102,6 @@ const app = Vue.createApp({
 
 app.component('user-dashboard', UserDashboard);
 app.component('admin-dashboard', AdminDashboard);
+app.component('approver-dashboard', ApproverDashboard);
 
 app.mount('#app');
