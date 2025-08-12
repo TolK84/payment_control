@@ -4,6 +4,7 @@ const app = Vue.createApp({
         return {
             authState: 'checking', 
             userRole: '',
+            userName: '',
             login: '',
             password: '',
             message: '',
@@ -47,6 +48,7 @@ const app = Vue.createApp({
                 if (result.status === 'authenticated') {
                     this.authState = 'authenticated';
                     this.userRole = result.role;
+                    this.userName = result.name || '';
                 } else {
                     this.authState = 'unauthenticated';
                 }
@@ -73,6 +75,7 @@ const app = Vue.createApp({
                 if (result.status === 'success') {
                     this.authState = 'authenticated';
                     this.userRole = result.role;
+                    this.userName = result.name || '';
                 } else {
                     this.message = result.message || 'Неверный логин или пароль.';
                     this.messageColor = 'red';

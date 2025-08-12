@@ -34,7 +34,7 @@
     <div v-if="authState === 'authenticated'" class="main-container">
       <user-dashboard v-if="userRole === 'user'" @files-changed="handleFilesChanged"></user-dashboard>
       <admin-dashboard v-if="userRole === 'admin'" @files-changed="handleFilesChanged"></admin-dashboard>
-      <approver-dashboard v-if="userRole === 'approver'"></approver-dashboard>
+      <approver-dashboard v-if="userRole === 'approver'" :approver-name="userName"></approver-dashboard>
     </div>
   </div>
 

@@ -1,4 +1,6 @@
 const ApproverDashboard = {
+  props: ['approverName'],
+  
   template: `
   <div>
     <div v-if="!selectedDocument">
@@ -95,7 +97,6 @@ const ApproverDashboard = {
       isSubmitting: false,
       message: '',
       messageColor: 'green',
-      approverName: '',
       getPendingInvoicesWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/get-pending-invoices',
       submitDecisionWebhookUrl: 'https://h-0084.app.n8n.cloud/webhook/submit-decision',
       messageTimer: null
@@ -218,8 +219,7 @@ const ApproverDashboard = {
           body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
         });
         const data = await response.json();
-        this.documents = data.documents || [];
-        this.approverName = data.approver_name || '';
+        this.documents = data || [];
       } catch (error) {
         this.setMessage('Не удалось загрузить документы.', 'red');
       } finally {
