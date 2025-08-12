@@ -17,12 +17,18 @@ const UserDashboard = {
             <li v-for="doc in documents" :key="doc.id">
               <div>
                 <span class="doc-name">{{ doc.name }}</span>
-                <span class="doc-details">Дата: {{ doc.date }}</span>
+                <span class="doc-details">{{ doc.date }}</span>
+                <span class="doc-amount">{{ formatAmount(doc.amount) }}</span>
+                <span class="doc-organization" v-if="doc.organization">{{ doc.organization }}</span>
               </div>
               <div class="status-container">
-                <span class="doc-status" :class="doc.status">{{ statusLabels[doc.status] || doc.status }}</span>
-                <div class="status-indicators">
+                <div class="status-header">Статус</div>
+                <div class="status-person">
+                  <span class="person-name">Дамели</span>
                   <div class="status-square" :class="getPersonStatus(doc, 'Дамели')" :title="getPersonTitle(doc, 'Дамели')"></div>
+                </div>
+                <div class="status-person">
+                  <span class="person-name">Даурен Б</span>
                   <div class="status-square" :class="getPersonStatus(doc, 'Даурен Б')" :title="getPersonTitle(doc, 'Даурен Б')"></div>
                 </div>
               </div>
@@ -150,6 +156,10 @@ const UserDashboard = {
       const statusField = `Статус ${person}`;
       const status = doc[statusField] || "Не рассмотрено";
       return `${person}: ${status}`;
+    },
+    formatAmount(amount) {
+      if (!amount) return '';
+      return new Intl.NumberFormat('ru-RU').format(amount) + ' ₸';
     },
     closeSuccessScreen() {
       this.showSuccessScreen = false;

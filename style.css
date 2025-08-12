@@ -181,8 +181,30 @@ button:disabled {
 
 .status-container {
     display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    min-width: 80px;
+}
+
+.status-header {
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.status-person {
+    display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.person-name {
+    font-size: 11px;
+    color: #888;
+    white-space: nowrap;
 }
 
 .status-indicators {
@@ -230,6 +252,22 @@ button:disabled {
     font-size: 12px;
     color: #888;
     margin-top: 4px;
+}
+
+.doc-amount {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c3e50;
+    margin-top: 6px;
+}
+
+.doc-organization {
+    display: block;
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 4px;
+    font-style: italic;
 }
 
 .doc-status {
