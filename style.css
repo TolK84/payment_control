@@ -5,6 +5,18 @@
     --tg-theme-text-color: #000000;
     --tg-theme-button-color: #007bff;
     --tg-theme-button-text-color: #ffffff;
+    --tg-theme-secondary-bg-color: #f8f9fa;
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --tg-theme-bg-color: #1a1a1a;
+        --tg-theme-text-color: #ffffff;
+        --tg-theme-button-color: #0088cc;
+        --tg-theme-button-text-color: #ffffff;
+        --tg-theme-secondary-bg-color: #2d2d2d;
+    }
 }
 
 html, body {
@@ -316,7 +328,7 @@ button:disabled {
     border-radius: 0;
     font-size: 14px;
     font-weight: 500;
-    color: #666;
+    color: var(--tg-theme-text-color, #333);
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
@@ -329,6 +341,7 @@ button:disabled {
     justify-content: center;
     gap: 6px;
     white-space: nowrap;
+    opacity: 0.7;
 }
 
 .navigation button::before {
@@ -347,6 +360,7 @@ button:disabled {
 .navigation button.active {
     color: #fff;
     transform: translateY(-1px);
+    opacity: 1;
 }
 
 .navigation button.active::before {
@@ -354,8 +368,9 @@ button:disabled {
 }
 
 .navigation button:hover:not(.active) {
-    color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-color, #007bff);
     background: rgba(0, 123, 255, 0.05);
+    opacity: 1;
 }
 
 /* Стили для кнопок с иконками - адаптивные размеры */
