@@ -62,8 +62,12 @@ const AdminDashboard = {
 
       <div class="bottom-navigation">
         <div v-if="filesToUpload.length === 0" class="navigation">
-          <button @click="showingDocumentList = false" :class="{ active: !showingDocumentList }">Отправить</button>
-          <button @click="fetchDocuments" :class="{ active: showingDocumentList }">Статус счетов</button>
+          <button @click="showingDocumentList = false" :class="{ active: !showingDocumentList }">
+            ⬆️ <span>Отправить</span>
+          </button>
+          <button @click="fetchDocuments" :class="{ active: showingDocumentList }">
+            📋 <span>Статус счетов</span>
+          </button>
         </div>
         <div v-else class="bottom-actions">
           <button @click="sendFiles" :disabled="isUploading" class="btn-main">

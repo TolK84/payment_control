@@ -314,7 +314,7 @@ button:disabled {
     background: none;
     border: none;
     border-radius: 0;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     color: #666;
     cursor: pointer;
@@ -323,6 +323,12 @@ button:disabled {
     overflow: hidden;
     text-align: center;
     line-height: 1.2;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
 }
 
 .navigation button::before {
@@ -352,38 +358,43 @@ button:disabled {
     background: rgba(0, 123, 255, 0.05);
 }
 
-/* Специальная адаптация для трех кнопок в ApproverDashboard */
-.navigation button:nth-child(3) {
-    font-size: 12px;
+/* Стили для кнопок с иконками - адаптивные размеры */
+/* Для двух кнопок - больше места */
+.navigation button:first-child:nth-last-child(2),
+.navigation button:first-child:nth-last-child(2) ~ button {
+    padding: 16px 12px;
+    font-size: 15px;
 }
 
-/* Стили для кнопок с иконками */
-.navigation button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    white-space: nowrap;
+/* Для трех кнопок - компактнее */
+.navigation button:first-child:nth-last-child(3),
+.navigation button:first-child:nth-last-child(3) ~ button {
+    padding: 14px 8px;
+    font-size: 14px;
+}
+
+.navigation button:first-child:nth-last-child(3) ~ button:last-child {
+    font-size: 13px;
 }
 
 /* Адаптация для мобильных устройств с тремя кнопками */
 @media (max-width: 380px) {
     .navigation button {
-        padding: 12px 4px;
-        font-size: 11px;
-        gap: 2px;
+        padding: 12px 6px;
+        font-size: 12px;
+        gap: 4px;
     }
     
     .navigation button:nth-child(3) {
-        font-size: 10px;
+        font-size: 11px;
     }
 }
 
 /* Для очень маленьких экранов - показываем только иконки */
 @media (max-width: 320px) {
     .navigation button {
-        font-size: 16px;
-        padding: 12px 8px;
+        font-size: 18px;
+        padding: 14px 8px;
     }
     
     .navigation button span {
