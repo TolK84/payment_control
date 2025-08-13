@@ -310,17 +310,19 @@ button:disabled {
 
 .navigation button {
     flex: 1;
-    padding: 16px 20px;
+    padding: 14px 8px;
     background: none;
     border: none;
     border-radius: 0;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 500;
     color: #666;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    text-align: center;
+    line-height: 1.2;
 }
 
 .navigation button::before {
@@ -348,6 +350,45 @@ button:disabled {
 .navigation button:hover:not(.active) {
     color: var(--tg-theme-button-color);
     background: rgba(0, 123, 255, 0.05);
+}
+
+/* Специальная адаптация для трех кнопок в ApproverDashboard */
+.navigation button:nth-child(3) {
+    font-size: 12px;
+}
+
+/* Стили для кнопок с иконками */
+.navigation button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+/* Адаптация для мобильных устройств с тремя кнопками */
+@media (max-width: 380px) {
+    .navigation button {
+        padding: 12px 4px;
+        font-size: 11px;
+        gap: 2px;
+    }
+    
+    .navigation button:nth-child(3) {
+        font-size: 10px;
+    }
+}
+
+/* Для очень маленьких экранов - показываем только иконки */
+@media (max-width: 320px) {
+    .navigation button {
+        font-size: 16px;
+        padding: 12px 8px;
+    }
+    
+    .navigation button span {
+        display: none;
+    }
 }
 
 .bottom-actions {

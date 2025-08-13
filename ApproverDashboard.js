@@ -93,9 +93,15 @@ const ApproverDashboard = {
 
       <div class="bottom-navigation">
         <div v-if="filesToUpload.length === 0" class="navigation">
-          <button @click="currentView = 'upload'" :class="{ active: currentView === 'upload' }">Отправить</button>
-          <button @click="switchToStatus" :class="{ active: currentView === 'status' }">Статус счетов</button>
-          <button @click="switchToApprove" :class="{ active: currentView === 'approve' }">Согласование</button>
+          <button @click="currentView = 'upload'" :class="{ active: currentView === 'upload' }">
+            📤 <span>Загрузка</span>
+          </button>
+          <button @click="switchToStatus" :class="{ active: currentView === 'status' }">
+            📊 <span>Статус</span>
+          </button>
+          <button @click="switchToApprove" :class="{ active: currentView === 'approve' }">
+            ✅ <span>Согласование</span>
+          </button>
         </div>
         <div v-else class="bottom-actions">
           <button @click="sendFiles" :disabled="isUploading" class="btn-main">
