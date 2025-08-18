@@ -51,6 +51,8 @@ const ApproverDashboard = {
                 <span class="doc-details">{{ doc.date }}</span>
                 <span class="doc-amount">{{ formatAmount(doc.amount) }}</span>
                 <span class="doc-organization" v-if="doc.organization">{{ doc.organization }}</span>
+                <span class="doc-payer" v-if="doc['Плательщик']">Плательщик: {{ doc['Плательщик'] }}</span>
+                <span class="doc-author" v-if="doc.author_name">Автор: {{ doc.author_name }}</span>
               </div>
               <div class="status-container">
                 <div class="current-status">
@@ -142,6 +144,8 @@ const ApproverDashboard = {
         <div class="doc-details">{{ selectedDocument.date }}</div>
         <div class="doc-amount">{{ formatAmount(selectedDocument.amount) }}</div>
         <div class="doc-organization" v-if="selectedDocument.organization">{{ selectedDocument.organization }}</div>
+        <div class="doc-payer" v-if="selectedDocument['Плательщик']">Плательщик: {{ selectedDocument['Плательщик'] }}</div>
+        <div class="doc-author" v-if="selectedDocument.author_name">Автор счета: {{ selectedDocument.author_name }}</div>
       </div>
 
       <div class="review-section">
@@ -175,11 +179,19 @@ const ApproverDashboard = {
           <button @click="submitDecision" :disabled="isSubmitting" class="btn-main">
             {{ isSubmitting ? 'Отправка...' : 'Отправить решение' }}
           </button>
+          <button @click="backToList" class="btn-secondary" style="margin-left: 10px;">
+            Назад к списку
+          </button>
         </div>
       </div>
       
       <div v-if="message" class="message" :style="{ color: messageColor }">
         {{ message }}
+        <div v-if="message.includes('успешно отправлено')" style="margin-top: 15px;">
+          <button @click="backToList" class="btn-main">
+            Назад к списку
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -422,23 +434,68 @@ const ApproverDashboard = {
           tg_data: window.Telegram.WebApp.initData
         };
         
+        console.log('Отправляем данные:', requestData);
+        
         const response = await fetch(this.submitDecisionWebhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(requestData)
         });
         
-        const result = await response.json();
-        if (result.success) {
+        console.log('Статус ответа:', response.status);
+        console.log('Заголовки ответа:', Object.fromEntries(response.headers.entries()));
+        
+        // Проверяем HTTP статус
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('HTTP ошибка:', response.status, errorText);
+          this.setMessage(`Ошибка сервера: ${response.status} - ${errorText}`, 'red');
+          return;
+        }
+        
+        const responseText = await response.text();
+        console.log('Сырой ответ сервера:', responseText);
+        
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('Ошибка парсинга JSON:', parseError);
+          this.setMessage('Сервер вернул некорректный JSON ответ', 'red');
+          return;
+        }
+        
+        console.log('Распарсенный результат:', result);
+        
+        // Проверяем успех по формату ответа
+        let isSuccess = false;
+        
+        if (result.success === true || result.status === 'success') {
+          // Стандартный формат с полем success
+          isSuccess = true;
+        } else if (Array.isArray(result) && result.length > 0) {
+          // Формат массива со статусами - это успешный ответ
+          const statusUpdate = result[0];
+          if (statusUpdate && (statusUpdate['Статус Дамели'] || statusUpdate['Статус Даурен Б'])) {
+            isSuccess = true;
+            console.log('Успешное обновление статуса:', statusUpdate);
+          }
+        } else if (response.status === 200 && !result.error) {
+          // HTTP 200 без ошибок - считаем успехом
+          isSuccess = true;
+        }
+        
+        if (isSuccess) {
           this.setMessage('Решение успешно отправлено', 'green');
           setTimeout(() => {
             this.backToList();
           }, 1500);
         } else {
-          this.setMessage(result.message || 'Ошибка при отправке решения', 'red');
+          this.setMessage(result.message || result.error || 'Ошибка при отправке решения', 'red');
         }
       } catch (error) {
-        this.setMessage('Ошибка сети при отправке решения', 'red');
+        console.error('Ошибка при отправке решения:', error);
+        this.setMessage('Ошибка сети при отправке решения: ' + error.message, 'red');
       } finally {
         this.isSubmitting = false;
       }
