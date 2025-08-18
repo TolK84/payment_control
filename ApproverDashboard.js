@@ -188,7 +188,7 @@ const ApproverDashboard = {
       <div v-if="message" class="message" :style="{ color: messageColor }">
         {{ message }}
         <div v-if="message.includes('успешно отправлено')" style="margin-top: 15px;">
-          <button @click="backToList" class="btn-main">
+          <button @click="backToList" class="btn-secondary">
             Назад к списку
           </button>
         </div>
