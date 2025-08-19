@@ -389,6 +389,7 @@ const ApproverDashboard = {
       this.decision = '';
       this.comment = '';
       this.message = '';
+      // Принудительно обновляем список документов
       this.fetchDocuments();
     },
     
@@ -479,6 +480,8 @@ const ApproverDashboard = {
         
         if (isSuccess) {
           this.setMessage('Решение успешно отправлено', 'green');
+          // Обновляем список документов сразу после успешного согласования
+          await this.fetchDocuments();
           setTimeout(() => {
             this.backToList();
           }, 1500);
@@ -509,9 +512,25 @@ const ApproverDashboard = {
           body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
         });
         const data = await response.json();
-        this.documents = data || [];
+        
+        console.log('Ответ от get-pending-invoices:', data);
+        
+        // Проверяем если бэкенд вернул сообщение о том, что нет документов
+        if (typeof data === 'string' && data.includes('Нет счетов на согласование')) {
+          console.log('Бэкенд сообщил: нет документов для согласования');
+          this.documents = [];
+        } else if (Array.isArray(data)) {
+          this.documents = data;
+        } else {
+          // Если данные в другом формате
+          this.documents = [];
+        }
+        
+        console.log('Установлены документы:', this.documents);
       } catch (error) {
+        console.error('Ошибка загрузки документов:', error);
         this.setMessage('Не удалось загрузить документы.', 'red');
+        this.documents = [];
       } finally {
         this.isLoading = false;
       }
