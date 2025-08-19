@@ -45,17 +45,6 @@ input, textarea, select {
     --tg-theme-secondary-bg-color: #f8f9fa;
 }
 
-/* Темная тема */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --tg-theme-bg-color: #1a1a1a;
-        --tg-theme-text-color: #ffffff;
-        --tg-theme-button-color: #0088cc;
-        --tg-theme-button-text-color: #ffffff;
-        --tg-theme-secondary-bg-color: #2d2d2d;
-    }
-}
-
 html, body {
     height: 100vh;
     height: -webkit-fill-available; /* iOS Safari fix */
