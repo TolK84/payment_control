@@ -41,8 +41,8 @@ html, body {
 }
 
 .main-container {
-    padding: 20px;
-    padding-bottom: 120px; /* Увеличиваем отступ для поднятой навигации */
+    padding: 15px;
+    padding-bottom: 100px; /* Уменьшаем отступ снизу */
     flex-grow: 1;
     overflow-y: auto;
     height: 100%;
@@ -540,12 +540,16 @@ button:disabled {
 
 .document-review {
   padding: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .review-header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  position: relative;
   margin-bottom: 12px;
   padding-bottom: 10px;
   border-bottom: 1px solid #e9ecef;
@@ -554,6 +558,25 @@ button:disabled {
 .review-header h3 {
   margin: 0;
   font-size: 16px;
+  color: #495057;
+  flex: 1;
+  text-align: center;
+}
+
+.btn-arrow-back {
+  position: absolute;
+  left: 0;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.btn-arrow-back:hover {
   color: #495057;
 }
 
@@ -574,20 +597,24 @@ button:disabled {
 }
 
 .btn-back-compact {
-  background: none;
-  border: 1px solid #6c757d;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
   color: #6c757d;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.2s ease;
   display: inline-block;
+  text-align: center;
+  min-width: 60px;
+  font-weight: 500;
 }
 
 .btn-back-compact:hover {
-  background-color: #6c757d;
-  color: white;
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+  color: #495057;
 }
 
 .document-details {
