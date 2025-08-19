@@ -135,7 +135,6 @@ const ApproverDashboard = {
 
     <div v-else class="document-review">
       <div class="review-header">
-        <button @click="backToList" class="btn-back">← Назад</button>
         <h3>Согласование документа</h3>
       </div>
       
@@ -179,17 +178,17 @@ const ApproverDashboard = {
           <button @click="submitDecision" :disabled="isSubmitting" class="btn-main">
             {{ isSubmitting ? 'Отправка...' : 'Отправить решение' }}
           </button>
-          <button @click="backToList" class="btn-secondary" style="margin-left: 10px;">
-            Назад к списку
+          <button @click="backToList" class="btn-back-compact" style="margin-left: 10px;">
+            Назад
           </button>
         </div>
       </div>
       
       <div v-if="message" class="message" :style="{ color: messageColor }">
         {{ message }}
-        <div v-if="message.includes('успешно отправлено')" style="margin-top: 15px;">
-          <button @click="backToList" class="btn-secondary">
-            Назад к списку
+        <div v-if="message.includes('успешно отправлено')" style="margin-top: 10px;">
+          <button @click="backToList" class="btn-back-compact">
+            Назад
           </button>
         </div>
       </div>
