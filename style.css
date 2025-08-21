@@ -779,6 +779,23 @@ button:disabled {
   font-weight: 500;
 }
 
+/* Filter section styles */
+.filter-section {
+  margin-bottom: 15px;
+  text-align: right;
+}
+
+.period-filter {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
+  cursor: pointer;
+  min-width: 100px;
+}
+
 .status-approved {
   background-color: #d4edda;
   color: #155724;

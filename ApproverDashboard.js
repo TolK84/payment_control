@@ -14,6 +14,13 @@ const ApproverDashboard = {
         </div>
         <div v-if="currentView === 'status'">
           <h2>Статус счетов</h2>
+          <div class="filter-section">
+            <select v-model="selectedPeriod" @change="fetchAllDocuments" class="period-filter">
+              <option value="week">За неделю</option>
+              <option value="month">За месяц</option>
+              <option value="all">За все время</option>
+            </select>
+          </div>
           <div v-if="isLoadingStatus"><p>Загрузка...</p></div>
           <ul v-else class="doc-list">
             <li v-for="doc in allDocuments" :key="doc.id">
@@ -219,7 +226,8 @@ const ApproverDashboard = {
         pending: 'В обработке',
         rejected: 'Отклонен'
       },
-      messageTimer: null
+      messageTimer: null,
+      selectedPeriod: 'week' // По умолчанию за неделю
     };
   },
 
@@ -340,7 +348,10 @@ const ApproverDashboard = {
         const response = await fetch(this.getAllInvoicesWebhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
+          body: JSON.stringify({ 
+            tg_data: window.Telegram.WebApp.initData,
+            period: this.selectedPeriod
+          })
         });
         const data = await response.json();
         this.allDocuments = data;

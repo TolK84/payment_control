@@ -12,6 +12,13 @@ const UserDashboard = {
         </div>
         <div v-if="showingDocumentList">
           <h2>Статус счетов</h2>
+          <div class="filter-section">
+            <select v-model="selectedPeriod" @change="fetchDocuments" class="period-filter">
+              <option value="week">За неделю</option>
+              <option value="month">За месяц</option>
+              <option value="all">За все время</option>
+            </select>
+          </div>
           <div v-if="isLoading"><p>Загрузка...</p></div>
           <ul v-else class="doc-list">
             <li v-for="doc in documents" :key="doc.id">
@@ -119,6 +126,7 @@ const UserDashboard = {
       showSuccessScreen: false,
       sentFilesCount: 0,
       uploadComment: '',
+      selectedPeriod: 'week', // По умолчанию за неделю
     };
   },
 
@@ -231,7 +239,10 @@ const UserDashboard = {
         const response = await fetch(this.getInvoicesWebhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
+          body: JSON.stringify({ 
+            tg_data: window.Telegram.WebApp.initData,
+            period: this.selectedPeriod
+          })
         });
         const data = await response.json();
         this.documents = data;
