@@ -45,10 +45,23 @@ const app = Vue.createApp({
                     body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
                 });
                 const result = await response.json();
-                if (result.status === 'authenticated') {
+                console.log('Результат проверки авторизации:', result);
+                
+                // Проверяем если ответ - массив и содержит объект с активированным статусом
+                if (Array.isArray(result) && result.length > 0 && result[0].status === 'активировано') {
+                    const user = result[0];
+                    
+                    // Определяем роль на основе логина
+                    let userRole = 'user';
+                    if (user.login === 'admin' || user.login === 'tolk') {
+                        userRole = 'admin';
+                    } else if (user.login === 'dameli' || user.login === 'dauren') {
+                        userRole = 'approver';
+                    }
+                    
                     this.authState = 'authenticated';
-                    this.userRole = result.role;
-                    this.userName = result.name || '';
+                    this.userRole = userRole;
+                    this.userName = user.login || '';
                 } else {
                     this.authState = 'unauthenticated';
                 }
@@ -72,22 +85,34 @@ const app = Vue.createApp({
                 });
                 const result = await response.json();
                 console.log('Результат авторизации:', result);
-                if (result.status === 'success') {
+                
+                // Проверяем если ответ - массив и содержит объект с активированным статусом
+                if (Array.isArray(result) && result.length > 0 && result[0].status === 'активировано') {
                     console.log('Авторизация успешна, показываем приветствие');
-                    this.message = `Добро пожаловать, ${result.name || 'пользователь'}!`;
+                    const user = result[0];
+                    this.message = `Добро пожаловать, ${user.login || 'пользователь'}!`;
                     this.messageColor = 'green';
                     this.isLoading = false;
+                    
+                    // Определяем роль на основе логина
+                    let userRole = 'user';
+                    if (user.login === 'admin' || user.login === 'tolk') {
+                        userRole = 'admin';
+                    } else if (user.login === 'dameli' || user.login === 'dauren') {
+                        userRole = 'approver';
+                    }
+                    
                     // Небольшая задержка для показа приветствия, затем переход
                     setTimeout(() => {
                         console.log('Переходим на дашборд');
                         this.authState = 'authenticated';
-                        this.userRole = result.role;
-                        this.userName = result.name || '';
+                        this.userRole = userRole;
+                        this.userName = user.login || '';
                         this.message = ''; // Очищаем сообщение после перехода
                     }, 1500);
                 } else {
-                    console.log('Ошибка авторизации:', result.message);
-                    this.message = result.message || 'Неверный логин или пароль.';
+                    console.log('Ошибка авторизации или неизвестный формат ответа:', result);
+                    this.message = 'Неверный логин или пароль.';
                     this.messageColor = 'red';
                     this.isLoading = false;
                 }
