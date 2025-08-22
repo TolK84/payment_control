@@ -45,13 +45,10 @@ const app = Vue.createApp({
                     body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
                 });
                 const result = await response.json();
-                console.log('Результат проверки авторизации:', result);
                 
-                // Проверяем если ответ - массив и содержит объект с активированным статусом
                 if (Array.isArray(result) && result.length > 0 && result[0].status === 'активировано') {
                     const user = result[0];
                     
-                    // Определяем роль на основе логина
                     let userRole = 'user';
                     if (user.login === 'admin' || user.login === 'tolk') {
                         userRole = 'admin';
@@ -61,18 +58,17 @@ const app = Vue.createApp({
                     
                     this.authState = 'authenticated';
                     this.userRole = userRole;
-                    this.userName = user.login || '';
+                    this.userName = user.login;
                 } else {
                     this.authState = 'unauthenticated';
                 }
             } catch (error) {
                 this.authState = 'unauthenticated';
-                this.message = 'Ошибка сети при проверке.';
             }
         },
         async processLogin() {
             this.isLoading = true;
-            this.message = ''; // Очищаем сообщение, показываем только в кнопке
+            this.message = '';
             try {
                 const response = await fetch(this.loginWebhookUrl, {
                     method: 'POST',
@@ -83,18 +79,14 @@ const app = Vue.createApp({
                         tg_data: window.Telegram.WebApp.initData
                     })
                 });
-                const result = await response.json();
-                console.log('Результат авторизации:', result);
                 
-                // Проверяем если ответ - массив и содержит объект с активированным статусом
+                const result = await response.json();
+                
                 if (Array.isArray(result) && result.length > 0 && result[0].status === 'активировано') {
-                    console.log('Авторизация успешна, показываем приветствие');
                     const user = result[0];
-                    this.message = `Добро пожаловать, ${user.login || 'пользователь'}!`;
+                    this.message = `Добро пожаловать, ${user.login}!`;
                     this.messageColor = 'green';
-                    this.isLoading = false;
                     
-                    // Определяем роль на основе логина
                     let userRole = 'user';
                     if (user.login === 'admin' || user.login === 'tolk') {
                         userRole = 'admin';
@@ -102,22 +94,20 @@ const app = Vue.createApp({
                         userRole = 'approver';
                     }
                     
-                    // Небольшая задержка для показа приветствия, затем переход
                     setTimeout(() => {
-                        console.log('Переходим на дашборд');
                         this.authState = 'authenticated';
                         this.userRole = userRole;
-                        this.userName = user.login || '';
-                        this.message = ''; // Очищаем сообщение после перехода
+                        this.userName = user.login;
+                        this.message = '';
+                        this.isLoading = false;
                     }, 1500);
                 } else {
-                    console.log('Ошибка авторизации или неизвестный формат ответа:', result);
                     this.message = 'Неверный логин или пароль.';
                     this.messageColor = 'red';
                     this.isLoading = false;
                 }
             } catch (error) {
-                this.message = 'Ошибка сети. Попробуйте снова.';
+                this.message = 'Ошибка сети.';
                 this.messageColor = 'red';
                 this.isLoading = false;
             }
