@@ -8,7 +8,7 @@ const app = Vue.createApp({
             login: '',
             password: '',
             message: '',
-            messageColor: 'red',
+            messageColor: 'green', // Устанавливаем зеленый по умолчанию
             isLoading: false,
             checkAuthWebhookUrl: 'https://mfs-650.app.n8n.cloud/webhook/check-auth',
             loginWebhookUrl: 'https://mfs-650.app.n8n.cloud/webhook/login',
@@ -46,12 +46,6 @@ const app = Vue.createApp({
                 });
                 const result = await response.json();
                 if (result.status === 'authenticated') {
-                    this.message = `Добро пожаловать, ${result.name || 'пользователь'}!`;
-                    this.messageColor = 'green';
-                    // Очищаем сообщение через некоторое время при автоматической авторизации
-                    setTimeout(() => {
-                        this.message = '';
-                    }, 3000);
                     this.authState = 'authenticated';
                     this.userRole = result.role;
                     this.userName = result.name || '';
@@ -65,8 +59,7 @@ const app = Vue.createApp({
         },
         async processLogin() {
             this.isLoading = true;
-            this.message = 'Проверка...';
-            this.messageColor = 'black';
+            this.message = ''; // Очищаем сообщение, показываем только в кнопке
             try {
                 const response = await fetch(this.loginWebhookUrl, {
                     method: 'POST',
@@ -78,18 +71,22 @@ const app = Vue.createApp({
                     })
                 });
                 const result = await response.json();
+                console.log('Результат авторизации:', result);
                 if (result.status === 'success') {
+                    console.log('Авторизация успешна, показываем приветствие');
                     this.message = `Добро пожаловать, ${result.name || 'пользователь'}!`;
                     this.messageColor = 'green';
+                    this.isLoading = false;
                     // Небольшая задержка для показа приветствия, затем переход
                     setTimeout(() => {
+                        console.log('Переходим на дашборд');
                         this.authState = 'authenticated';
                         this.userRole = result.role;
                         this.userName = result.name || '';
-                        this.isLoading = false;
                         this.message = ''; // Очищаем сообщение после перехода
-                    }, 1000);
+                    }, 1500);
                 } else {
+                    console.log('Ошибка авторизации:', result.message);
                     this.message = result.message || 'Неверный логин или пароль.';
                     this.messageColor = 'red';
                     this.isLoading = false;

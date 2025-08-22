@@ -30,7 +30,7 @@
       <button type="submit" :disabled="isLoading">
         {{ isLoading ? 'Проверка...' : 'Войти' }}
       </button>
-      <p id="message" :style="{ color: messageColor }">{{ message }}</p>
+      <p v-if="message" id="message" :style="{ color: messageColor }">{{ message }}</p>
     </form>
 
     <div v-if="authState === 'authenticated'" class="main-container">
