@@ -400,8 +400,10 @@ const ApproverDashboard = {
       this.decision = '';
       this.comment = '';
       this.message = '';
-      // Принудительно обновляем список документов
-      this.fetchDocuments();
+      // Добавляем небольшую задержку для обновления списка документов
+      setTimeout(() => {
+        this.fetchDocuments();
+      }, 500);
     },
     
     setDecision(newDecision) {
@@ -491,8 +493,7 @@ const ApproverDashboard = {
         
         if (isSuccess) {
           this.setMessage('Решение успешно отправлено', 'green');
-          // Обновляем список документов сразу после успешного согласования
-          await this.fetchDocuments();
+          // Просто возвращаемся к списку без дополнительного обновления
           setTimeout(() => {
             this.backToList();
           }, 1500);
@@ -517,11 +518,19 @@ const ApproverDashboard = {
     async fetchDocuments() {
       this.isLoading = true;
       try {
+        console.log('Загружаем документы для согласования...');
         const response = await fetch(this.getPendingInvoicesWebhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
         });
+        
+        console.log('Статус ответа:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ошибка: ${response.status}`);
+        }
+        
         const data = await response.json();
         
         console.log('Ответ от get-pending-invoices:', data);
