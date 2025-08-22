@@ -46,19 +46,10 @@ const app = Vue.createApp({
                 });
                 const result = await response.json();
                 
-                if (Array.isArray(result) && result.length > 0 && result[0].status === 'активировано') {
-                    const user = result[0];
-                    
-                    let userRole = 'user';
-                    if (user.login === 'admin' || user.login === 'tolk') {
-                        userRole = 'admin';
-                    } else if (user.login === 'dameli' || user.login === 'dauren') {
-                        userRole = 'approver';
-                    }
-                    
+                if (result.status === 'authenticated') {
                     this.authState = 'authenticated';
-                    this.userRole = userRole;
-                    this.userName = user.login;
+                    this.userRole = result.role;
+                    this.userName = this.login;
                 } else {
                     this.authState = 'unauthenticated';
                 }
@@ -82,22 +73,15 @@ const app = Vue.createApp({
                 
                 const result = await response.json();
                 
-                if (Array.isArray(result) && result.length > 0 && result[0].status === 'активировано') {
-                    const user = result[0];
-                    this.message = `Добро пожаловать, ${user.login}!`;
+                // Проверяем формат ответа с status: "authenticated"
+                if (result.status === 'authenticated') {
+                    this.message = result.message || `Добро пожаловать!`;
                     this.messageColor = 'green';
-                    
-                    let userRole = 'user';
-                    if (user.login === 'admin' || user.login === 'tolk') {
-                        userRole = 'admin';
-                    } else if (user.login === 'dameli' || user.login === 'dauren') {
-                        userRole = 'approver';
-                    }
                     
                     setTimeout(() => {
                         this.authState = 'authenticated';
-                        this.userRole = userRole;
-                        this.userName = user.login;
+                        this.userRole = result.role;
+                        this.userName = this.login;
                         this.message = '';
                         this.isLoading = false;
                     }, 1500);
