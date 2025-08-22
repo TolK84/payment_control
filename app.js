@@ -9,6 +9,7 @@ const app = Vue.createApp({
             password: '',
             message: '',
             messageColor: 'red',
+            isLoading: false,
             checkAuthWebhookUrl: 'https://mfs-650.app.n8n.cloud/webhook/check-auth',
             loginWebhookUrl: 'https://mfs-650.app.n8n.cloud/webhook/login',
             isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
@@ -45,6 +46,12 @@ const app = Vue.createApp({
                 });
                 const result = await response.json();
                 if (result.status === 'authenticated') {
+                    this.message = `Добро пожаловать, ${result.name || 'пользователь'}!`;
+                    this.messageColor = 'green';
+                    // Очищаем сообщение через некоторое время при автоматической авторизации
+                    setTimeout(() => {
+                        this.message = '';
+                    }, 3000);
                     this.authState = 'authenticated';
                     this.userRole = result.role;
                     this.userName = result.name || '';
@@ -72,9 +79,16 @@ const app = Vue.createApp({
                 });
                 const result = await response.json();
                 if (result.status === 'success') {
-                    this.authState = 'authenticated';
-                    this.userRole = result.role;
-                    this.userName = result.name || '';
+                    this.message = `Добро пожаловать, ${result.name || 'пользователь'}!`;
+                    this.messageColor = 'green';
+                    // Небольшая задержка для показа приветствия, затем переход
+                    setTimeout(() => {
+                        this.authState = 'authenticated';
+                        this.userRole = result.role;
+                        this.userName = result.name || '';
+                        this.isLoading = false;
+                        this.message = ''; // Очищаем сообщение после перехода
+                    }, 1000);
                 } else {
                     this.message = result.message || 'Неверный логин или пароль.';
                     this.messageColor = 'red';
