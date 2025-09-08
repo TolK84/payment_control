@@ -10,8 +10,8 @@ const app = Vue.createApp({
             message: '',
             messageColor: 'green', // Устанавливаем зеленый по умолчанию
             isLoading: false,
-            checkAuthWebhookUrl: 'https://mfs-650.app.n8n.cloud/webhook/check-auth',
-            loginWebhookUrl: 'https://mfs-650.app.n8n.cloud/webhook/login',
+            checkAuthWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/check-auth',
+            loginWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/login',
             isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
             hasFiles: false
         }

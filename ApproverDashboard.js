@@ -218,9 +218,9 @@ const ApproverDashboard = {
       showSuccessScreen: false,
       sentFilesCount: 0,
       // API URLs
-  getPendingInvoicesWebhookUrl: 'https://mfs-650.app.n8n.cloud/webhook/get-pending-invoices',
-  getAllInvoicesWebhookUrl: 'https://mfs-650.app.n8n.cloud/webhook/get-invoices',
-  submitDecisionWebhookUrl: 'https://mfs-650.app.n8n.cloud/webhook/submit-decision',
+  getPendingInvoicesWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/get-pending-invoices',
+  getAllInvoicesWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/get-invoices',
+  submitDecisionWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/submit-decision',
       statusLabels: {
         approved: 'Согласован',
         pending: 'В обработке',
@@ -292,7 +292,7 @@ const ApproverDashboard = {
     async sendFiles() {
       if (this.filesToUpload.length === 0) return;
       this.isUploading = true;
-  const webhookUrl = 'https://mfs-650.app.n8n.cloud/webhook/upload-invoice';
+  const webhookUrl = 'https://n8n.eurasiantech.kz/webhook/upload-invoice';
       const apiKey = 'super-secret-key-123';
       for (const file of this.filesToUpload) {
         const formData = new FormData();

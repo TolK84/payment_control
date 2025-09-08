@@ -112,7 +112,7 @@ const AdminDashboard = {
       showingDocumentList: false,
       documents: [],
       isLoading: false,
-  getAllInvoicesWebhookUrl: 'https://mfs-650.app.n8n.cloud/webhook/get-invoices',
+  getAllInvoicesWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/get-invoices',
       uploadMessage: '',
       uploadMessageColor: 'green',
       filesToUpload: [],
@@ -210,7 +210,7 @@ const AdminDashboard = {
     async sendFiles() {
       if (this.filesToUpload.length === 0) return;
       this.isUploading = true;
-  const webhookUrl = 'https://mfs-650.app.n8n.cloud/webhook/upload-invoice';
+  const webhookUrl = 'https://n8n.eurasiantech.kz/webhook/upload-invoice';
       const apiKey = 'super-secret-key-123';
       for (const file of this.filesToUpload) {
         const formData = new FormData();
