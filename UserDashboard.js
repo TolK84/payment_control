@@ -211,14 +211,13 @@ const UserDashboard = {
       if (this.filesToUpload.length === 0) return;
       this.isUploading = true;
     const webhookUrl = 'https://n8n.eurasiantech.kz/webhook/upload-invoice';
-      const apiKey = 'super-secret-key-123';
       for (const file of this.filesToUpload) {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('comment', this.uploadComment);
         formData.append('tg_data', window.Telegram.WebApp.initData);
         try {
-          const response = await fetch(webhookUrl, { method: 'POST', headers: { 'X-N8N-API-Key': apiKey }, body: formData });
+          const response = await fetch(webhookUrl, { method: 'POST', body: formData });
           if (!response.ok) { throw new Error('Network response was not ok'); }
         } catch {
           this.setMessage(`Ошибка отправки файла: ${file.name}`, 'red');
