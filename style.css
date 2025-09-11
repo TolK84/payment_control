@@ -403,6 +403,40 @@ form p {
 .file-status {
   color: #888;
   font-size: 14px;
+  margin-left: auto;
+  text-align: right;
+}
+
+.file-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.remove-file-btn {
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 0.2s;
+}
+
+.remove-file-btn:hover {
+  background: #ff3742;
+}
+
+.remove-file-btn:active {
+  transform: scale(0.95);
 }
 
 /* --- Навигация и Экран Успеха --- */

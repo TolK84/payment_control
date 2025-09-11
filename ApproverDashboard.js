@@ -92,7 +92,10 @@ const ApproverDashboard = {
           <ul class="doc-list">
             <li v-for="(file, index) in filesToUpload" :key="file.name + index">
               <span>{{ file.name }}</span>
-              <span class="file-status">готов к отправке</span>
+              <div class="file-actions">
+                <span class="file-status">готов к отправке</span>
+                <button @click="removeFile(index)" class="remove-file-btn" title="Удалить файл">×</button>
+              </div>
             </li>
           </ul>
         </div>
@@ -282,6 +285,9 @@ const ApproverDashboard = {
     },
     addFileToCache(file) {
       this.filesToUpload.push(file);
+    },
+    removeFile(index) {
+      this.filesToUpload.splice(index, 1);
     },
     cancelUpload() {
       this.filesToUpload = [];
