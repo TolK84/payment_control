@@ -106,6 +106,15 @@ const UserDashboard = {
         </div>
       </div>
     </div>
+
+    <!-- Модальное окно ошибки -->
+    <div v-if="showErrorModal" class="modal-overlay" @click="closeErrorModal">
+      <div class="modal-content" @click.stop>
+        <div class="error-icon">⚠️</div>
+        <p class="error-text">{{ errorMessage }}</p>
+        <button @click="closeErrorModal" class="btn-main">OK</button>
+      </div>
+    </div>
   </div>
   `,
 
@@ -128,6 +137,8 @@ const UserDashboard = {
       messageTimer: null,
       showSuccessScreen: false,
       sentFilesCount: 0,
+      showErrorModal: false,
+      errorMessage: '',
       uploadComment: '',
       selectedPeriod: 'week', // По умолчанию за неделю
     };
@@ -182,10 +193,25 @@ const UserDashboard = {
       this.$emit('files-changed', 0);
     },
     setMessage(message, color) {
-      this.uploadMessage = message;
-      this.uploadMessageColor = color;
-      clearTimeout(this.messageTimer);
-      this.messageTimer = setTimeout(() => { this.uploadMessage = ''; }, 3000);
+      if (color === 'red') {
+        // Для ошибок показываем модальное окно
+        this.errorMessage = message;
+        this.showErrorModal = true;
+      } else {
+        // Для обычных сообщений оставляем старую логику
+        this.uploadMessage = message;
+        this.uploadMessageColor = color;
+        clearTimeout(this.messageTimer);
+        this.messageTimer = setTimeout(() => { this.uploadMessage = ''; }, 3000);
+      }
+    },
+    closeErrorModal() {
+      this.showErrorModal = false;
+      this.errorMessage = '';
+      // Возвращаем в дефолтное состояние - очищаем файлы
+      this.filesToUpload = [];
+      this.uploadComment = '';
+      this.isUploading = false;
     },
     onDragOver() { this.isDragOver = true; },
     onDragLeave() { this.isDragOver = false; },

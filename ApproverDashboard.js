@@ -196,6 +196,15 @@ const ApproverDashboard = {
         {{ message }}
       </div>
     </div>
+
+    <!-- Модальное окно ошибки -->
+    <div v-if="showErrorModal" class="modal-overlay" @click="closeErrorModal">
+      <div class="modal-content" @click.stop>
+        <div class="error-icon">⚠️</div>
+        <p class="error-text">{{ errorMessage }}</p>
+        <button @click="closeErrorModal" class="btn-main">OK</button>
+      </div>
+    </div>
   </div>
   `,
 
@@ -220,6 +229,8 @@ const ApproverDashboard = {
       uploadMessageColor: 'green',
       showSuccessScreen: false,
       sentFilesCount: 0,
+      showErrorModal: false,
+      errorMessage: '',
       // API URLs
   getPendingInvoicesWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/get-pending-invoices',
   getAllInvoicesWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/get-invoices',
@@ -326,10 +337,25 @@ const ApproverDashboard = {
     },
     
     setUploadMessage(message, color = 'black') {
-      this.uploadMessage = message;
-      this.uploadMessageColor = color;
-      clearTimeout(this.messageTimer);
-      this.messageTimer = setTimeout(() => { this.uploadMessage = ''; }, 3000);
+      if (color === 'red') {
+        // Для ошибок показываем модальное окно
+        this.errorMessage = message;
+        this.showErrorModal = true;
+      } else {
+        // Для обычных сообщений оставляем старую логику
+        this.uploadMessage = message;
+        this.uploadMessageColor = color;
+        clearTimeout(this.messageTimer);
+        this.messageTimer = setTimeout(() => { this.uploadMessage = ''; }, 3000);
+      }
+    },
+    closeErrorModal() {
+      this.showErrorModal = false;
+      this.errorMessage = '';
+      // Возвращаем в дефолтное состояние - очищаем файлы
+      this.filesToUpload = [];
+      this.uploadComment = '';
+      this.isUploading = false;
     },
     
     // Status view methods
