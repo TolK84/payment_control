@@ -225,9 +225,14 @@ const UserDashboard = {
         formData.append('tg_data', window.Telegram.WebApp.initData);
         try {
           const response = await fetch(webhookUrl, { method: 'POST', body: formData });
-          if (!response.ok) { throw new Error('Network response was not ok'); }
-        } catch {
-          this.setMessage(`Ошибка отправки файла: ${file.name}`, 'red');
+          if (!response.ok) { 
+            if (response.status === 400) {
+              throw new Error('Ошибка. Данный счет уже загружался на согласование.');
+            }
+            throw new Error('Network response was not ok'); 
+          }
+        } catch (error) {
+          this.setMessage(error.message, 'red');
           this.isUploading = false;
           return;
         }
