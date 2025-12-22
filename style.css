@@ -2,143 +2,156 @@
 
 /* iOS specific fixes */
 @supports (-webkit-touch-callout: none) {
-    html, body {
-        position: fixed;
-        overflow: hidden;
-        width: 100%;
-        height: 100vh;
-        height: -webkit-fill-available;
-    }
-    
-    #app {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        height: -webkit-fill-available;
-        overflow: hidden;
-    }
-    
-    .main-container {
-        height: calc(100vh - 100px);
-        height: calc(-webkit-fill-available - 100px);
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+
+  html,
+  body {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+
+  #app {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    height: -webkit-fill-available;
+    overflow: hidden;
+  }
+
+  .main-container {
+    height: calc(100vh - 100px);
+    height: calc(-webkit-fill-available - 100px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* Input focus fixes for iOS */
-input, textarea, select {
-    -webkit-appearance: none;
-    appearance: none;
-    border-radius: 0;
-    zoom: 1;
-    font-size: 16px; /* Prevents zoom on iOS */
+input,
+textarea,
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  zoom: 1;
+  font-size: 16px;
+  /* Prevents zoom on iOS */
 }
 
 /* iOS specific form improvements */
 @supports (-webkit-touch-callout: none) {
-    form {
-        padding: 30px 20px;
-        max-width: 300px;
-    }
-    
-    input[type="text"],
-    input[type="password"] {
-        max-width: 260px;
-        -webkit-appearance: none;
-        appearance: none;
-        border-radius: 8px;
-    }
-    
-    button {
-        max-width: 260px;
-        -webkit-appearance: none;
-        appearance: none;
-        border-radius: 8px;
-    }
+  form {
+    padding: 30px 20px;
+    max-width: 300px;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    max-width: 260px;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 8px;
+  }
+
+  button {
+    max-width: 260px;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 8px;
+  }
 }
 
 :root {
-    --tg-theme-bg-color: #ffffff;
-    --tg-theme-text-color: #000000;
-    --tg-theme-button-color: #007bff;
-    --tg-theme-button-text-color: #ffffff;
-    --tg-theme-secondary-bg-color: #f8f9fa;
+  --tg-theme-bg-color: #ffffff;
+  --tg-theme-text-color: #000000;
+  --tg-theme-button-color: #007bff;
+  --tg-theme-button-text-color: #ffffff;
+  --tg-theme-secondary-bg-color: #f8f9fa;
 }
 
-html, body {
-    height: 100vh;
-    height: -webkit-fill-available; /* iOS Safari fix */
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--tg-theme-bg-color);
-    color: var(--tg-theme-text-color);
-    box-sizing: border-box;
-    position: fixed; /* Фиксируем для iOS */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+html,
+body {
+  height: 100vh;
+  height: -webkit-fill-available;
+  /* iOS Safari fix */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
+  box-sizing: border-box;
+  position: fixed;
+  /* Фиксируем для iOS */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 #app {
-    width: 100%;
-    height: 100vh;
-    height: -webkit-fill-available; /* iOS Safari fix */
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  height: -webkit-fill-available;
+  /* iOS Safari fix */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
 }
 
 .main-container {
-    padding: 15px;
-    padding-bottom: 100px;
-    flex-grow: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
-    height: calc(100vh - 100px); /* Учитываем навигацию */
-    height: calc(-webkit-fill-available - 100px); /* iOS fix */
-    box-sizing: border-box;
-    position: relative;
+  padding: 15px;
+  padding-bottom: 100px;
+  flex-grow: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* iOS smooth scrolling */
+  height: calc(100vh - 100px);
+  /* Учитываем навигацию */
+  height: calc(-webkit-fill-available - 100px);
+  /* iOS fix */
+  box-sizing: border-box;
+  position: relative;
 }
 
-h1, h2 {
-    text-align: center;
-    font-size: 18px;
-    margin-bottom: 20px;
-    font-weight: 500;
+h1,
+h2 {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: 500;
 }
 
 p {
-    margin: 0 0 10px 0;
+  margin: 0 0 10px 0;
 }
 
 /* Login form styles for better mobile appearance */
 form {
-    max-width: 320px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 320px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .checking-state {
-    text-align: center;
-    padding: 40px 20px;
+  text-align: center;
+  padding: 40px 20px;
 }
 
 /* --- Секции и контейнеры --- */
 .checking-state {
-    padding-top: 140px;
+  padding-top: 140px;
 }
 
 .send-section-initial {
-    padding-top: 40px;
+  padding-top: 40px;
 }
 
 .files-selected-view {
@@ -172,93 +185,94 @@ form {
 
 /* --- Формы и кнопки --- */
 .form-group {
-    margin-bottom: 20px;
-    text-align: center;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    text-align: center;
-    color: var(--tg-theme-text-color);
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--tg-theme-text-color);
 }
 
 input[type="text"],
 input[type="password"] {
-    width: 100%;
-    max-width: 280px;
-    padding: 12px 16px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-sizing: border-box;
-    font-size: 16px; /* 16px для iOS чтобы не было зума */
-    margin: 0 auto;
-    display: block;
+  width: 100%;
+  max-width: 280px;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 16px;
+  /* 16px для iOS чтобы не было зума */
+  margin: 0 auto;
+  display: block;
 }
 
 button {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    user-select: none;
-    width: 100%;
-    max-width: 280px;
-    margin: 0 auto;
-    display: block;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  display: block;
 }
 
 button:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
+  background-color: #aaa;
+  cursor: not-allowed;
 }
 
 .btn-main {
-    background: linear-gradient(135deg, var(--tg-theme-button-color), rgba(0, 123, 255, 0.8));
-    color: var(--tg-theme-button-text-color);
-    border-radius: 12px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 12px rgba(0, 123, 255, 0.3);
+  background: linear-gradient(135deg, var(--tg-theme-button-color), rgba(0, 123, 255, 0.8));
+  color: var(--tg-theme-button-text-color);
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(0, 123, 255, 0.3);
 }
 
 .btn-main:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(0, 123, 255, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 123, 255, 0.4);
 }
 
 .btn-secondary {
-    background: none;
-    color: var(--tg-theme-button-color);
-    padding: 8px;
-    width: auto;
+  background: none;
+  color: var(--tg-theme-button-color);
+  padding: 8px;
+  width: auto;
 }
 
 /* Login form message styles */
 form p {
-    text-align: center;
-    margin: 15px 0;
-    font-size: 14px;
-    max-width: 280px;
-    margin-left: auto;
-    margin-right: auto;
+  text-align: center;
+  margin: 15px 0;
+  font-size: 14px;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* --- Drag & Drop --- */
 .drop-zone {
-    border: 2px dashed #ccc;
-    border-radius: 12px;
-    padding: 80px 20px;
-    text-align: center;
-    transition: background-color 0.2s, border-color 0.2s;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 80px 20px;
+  text-align: center;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
 .drop-zone.drag-over {
-    background-color: #f0f8ff;
-    border-color: var(--tg-theme-button-color);
+  background-color: #f0f8ff;
+  border-color: var(--tg-theme-button-color);
 }
 
 .drop-zone.compact {
@@ -269,164 +283,182 @@ form p {
 
 /* --- Списки --- */
 .doc-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 8px;
 }
 
 .doc-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 16px;
-    border-bottom: 1px solid #e8e8e8;
-    background: white;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: background-color 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 16px;
+  border-bottom: 1px solid #e8e8e8;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s;
 }
 
 .doc-list li:hover {
-    background: #f8f9fa;
+  background: #f8f9fa;
 }
 
 .doc-list li:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
+  border-bottom: none;
+  margin-bottom: 0;
 }
 
 /* Стили для названий файлов в списке загрузки */
-.doc-list li > span:first-child {
-    flex: 1;
-    font-size: 15px;
-    font-weight: 500;
-    color: #2c3e50;
-    word-break: break-word;
-    padding-right: 16px;
-    line-height: 1.4;
+.doc-list li>span:first-child {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  color: #2c3e50;
+  word-break: break-word;
+  padding-right: 16px;
+  line-height: 1.4;
 }
 
 .status-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
-    min-width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 80px;
 }
 
 .status-header {
-    font-size: 12px;
-    font-weight: 500;
-    color: #666;
-    margin-bottom: 2px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 2px;
 }
 
 .status-person {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
 }
 
 .person-name {
-    font-size: 11px;
-    color: #888;
-    white-space: nowrap;
+  font-size: 11px;
+  color: #888;
+  white-space: nowrap;
 }
 
 .status-indicators {
-    display: flex;
-    gap: 6px;
+  display: flex;
+  gap: 6px;
 }
 
 .status-square {
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
-    border: 1px solid #ddd;
-    transition: all 0.2s ease;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+  transition: all 0.2s ease;
 }
 
 .status-inactive {
-    background-color: #f8f9fa;
-    border-color: #e9ecef;
+  background-color: #f8f9fa;
+  border-color: #e9ecef;
 }
 
 .status-active-empty {
-    background-color: #ffffff;
-    border-color: #6c757d;
-    box-shadow: 0 0 0 1px #6c757d;
+  background-color: #ffffff;
+  border-color: #6c757d;
+  box-shadow: 0 0 0 1px #6c757d;
 }
 
 .status-active-approved {
-    background-color: #28a745;
-    border-color: #28a745;
-    box-shadow: 0 0 0 1px #28a745;
+  background-color: #28a745;
+  border-color: #28a745;
+  box-shadow: 0 0 0 1px #28a745;
 }
 
 .status-active-rejected {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    box-shadow: 0 0 0 1px #dc3545;
+  background-color: #dc3545;
+  border-color: #dc3545;
+  box-shadow: 0 0 0 1px #dc3545;
+}
+
+.status-active-postponed {
+  background-color: #fff9c4;
+  border-color: #fdd835;
+  box-shadow: 0 0 0 1px #fdd835;
 }
 
 .doc-name {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .doc-details {
-    display: block;
-    font-size: 12px;
-    color: #888;
-    margin-top: 4px;
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
 }
 
 .doc-amount {
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
-    color: #2c3e50;
-    margin-top: 6px;
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-top: 6px;
 }
 
 .doc-organization {
-    display: block;
-    font-size: 12px;
-    color: #6c757d;
-    margin-top: 4px;
-    font-style: italic;
+  display: block;
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 4px;
+  font-style: italic;
 }
 
 .doc-payer {
-    display: block;
-    font-size: 12px;
-    color: #6c757d;
-    margin-top: 4px;
-    font-weight: 500;
+  display: block;
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 4px;
+  font-weight: 500;
 }
 
 .doc-author {
-    display: block;
-    font-size: 12px;
-    color: #6c757d;
-    margin-top: 4px;
-    font-style: italic;
+  display: block;
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 4px;
+  font-style: italic;
 }
 
 .doc-status {
-    font-size: 12px;
-    font-weight: 500;
-    padding: 4px 8px;
-    border-radius: 12px;
-    white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
 }
-.doc-status.approved { background-color: #e0f8e0; color: #008000; }
-.doc-status.pending  { background-color: #fff8e0; color: #f39c12; }
-.doc-status.rejected { background-color: #ffe0e0; color: #c0392b; }
+
+.doc-status.approved {
+  background-color: #e0f8e0;
+  color: #008000;
+}
+
+.doc-status.pending {
+  background-color: #fff8e0;
+  color: #f39c12;
+}
+
+.doc-status.rejected {
+  background-color: #ffe0e0;
+  color: #c0392b;
+}
 
 .file-status {
   color: #28a745;
@@ -490,100 +522,100 @@ form p {
 }
 
 .navigation button {
-    flex: 1;
-    padding: 14px 8px;
-    background: none;
-    border: none;
-    border-radius: 0;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--tg-theme-text-color, #333);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-    line-height: 1.2;
-    font-family: 'Roboto', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    white-space: nowrap;
-    opacity: 0.7;
+  flex: 1;
+  padding: 14px 8px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tg-theme-text-color, #333);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  line-height: 1.2;
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  opacity: 0.7;
 }
 
 .navigation button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, var(--tg-theme-button-color), rgba(0, 123, 255, 0.8));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: -1;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--tg-theme-button-color), rgba(0, 123, 255, 0.8));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
 }
 
 .navigation button.active {
-    color: #fff;
-    transform: translateY(-1px);
-    opacity: 1;
+  color: #fff;
+  transform: translateY(-1px);
+  opacity: 1;
 }
 
 .navigation button.active::before {
-    opacity: 1;
+  opacity: 1;
 }
 
 .navigation button:hover:not(.active) {
-    color: var(--tg-theme-button-color, #007bff);
-    background: rgba(0, 123, 255, 0.05);
-    opacity: 1;
+  color: var(--tg-theme-button-color, #007bff);
+  background: rgba(0, 123, 255, 0.05);
+  opacity: 1;
 }
 
 /* Стили для кнопок с иконками - адаптивные размеры */
 /* Для двух кнопок - больше места */
 .navigation button:first-child:nth-last-child(2),
-.navigation button:first-child:nth-last-child(2) ~ button {
-    padding: 16px 12px;
-    font-size: 15px;
+.navigation button:first-child:nth-last-child(2)~button {
+  padding: 16px 12px;
+  font-size: 15px;
 }
 
 /* Для трех кнопок - компактнее */
 .navigation button:first-child:nth-last-child(3),
-.navigation button:first-child:nth-last-child(3) ~ button {
-    padding: 14px 8px;
-    font-size: 14px;
+.navigation button:first-child:nth-last-child(3)~button {
+  padding: 14px 8px;
+  font-size: 14px;
 }
 
-.navigation button:first-child:nth-last-child(3) ~ button:last-child {
-    font-size: 13px;
+.navigation button:first-child:nth-last-child(3)~button:last-child {
+  font-size: 13px;
 }
 
 /* Адаптация для мобильных устройств с тремя кнопками */
 @media (max-width: 380px) {
-    .navigation button {
-        padding: 12px 6px;
-        font-size: 12px;
-        gap: 4px;
-    }
-    
-    .navigation button:nth-child(3) {
-        font-size: 11px;
-    }
+  .navigation button {
+    padding: 12px 6px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .navigation button:nth-child(3) {
+    font-size: 11px;
+  }
 }
 
 /* Для очень маленьких экранов - показываем только иконки */
 @media (max-width: 320px) {
-    .navigation button {
-        font-size: 18px;
-        padding: 14px 8px;
-    }
-    
-    .navigation button span {
-        display: none;
-    }
+  .navigation button {
+    font-size: 18px;
+    padding: 14px 8px;
+  }
+
+  .navigation button span {
+    display: none;
+  }
 }
 
 .bottom-actions {
@@ -650,6 +682,7 @@ form p {
   .bottom-navigation {
     bottom: max(40px, calc(env(safe-area-inset-bottom) + 40px));
   }
+
   .main-container {
     padding-bottom: max(120px, calc(env(safe-area-inset-bottom) + 120px));
   }
@@ -660,6 +693,7 @@ form p {
   .bottom-navigation {
     bottom: 50px;
   }
+
   .main-container {
     padding-bottom: 130px;
   }

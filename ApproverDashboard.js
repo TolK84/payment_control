@@ -367,6 +367,8 @@ const ApproverDashboard = {
         return 'status-active-approved';
       } else if (status === "Отказано") {
         return 'status-active-rejected';
+      } else if (status === "Отложено") {
+        return 'status-active-postponed';
       } else {
         return 'status-active-empty';
       }
