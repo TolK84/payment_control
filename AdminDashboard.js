@@ -124,7 +124,7 @@ const AdminDashboard = {
       showingDocumentList: false,
       documents: [],
       isLoading: false,
-  getAllInvoicesWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/get-invoices',
+      getAllInvoicesWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/get-invoices',
       uploadMessage: '',
       uploadMessageColor: 'green',
       filesToUpload: [],
@@ -148,7 +148,7 @@ const AdminDashboard = {
     getSuccessMessage() {
       const count = this.sentFilesCount;
       let word = '';
-      
+
       if (count === 1) {
         word = 'счет';
       } else if (count >= 2 && count <= 4) {
@@ -156,20 +156,20 @@ const AdminDashboard = {
       } else {
         word = 'счетов';
       }
-      
+
       let verb = '';
       if (count === 1) {
         verb = 'успешно отправлен';
       } else {
         verb = 'успешно отправлены';
       }
-      
+
       return `${count} ${word} ${verb} на согласование`;
     },
     getPersonStatus(doc, person) {
       const statusField = `Статус ${person}`;
       const status = doc[statusField] || "";
-      
+
       if (status === "Согласовано") {
         return 'status-active-approved';
       } else if (status === "Отказано") {
@@ -243,7 +243,7 @@ const AdminDashboard = {
     async sendFiles() {
       if (this.filesToUpload.length === 0) return;
       this.isUploading = true;
-  const webhookUrl = 'https://n8n.eurasiantech.kz/webhook/upload-invoice';
+      const webhookUrl = 'https://n8n.eurasiantech.kz/webhook/upload-invoice';
       for (const file of this.filesToUpload) {
         const formData = new FormData();
         formData.append('file', file);
@@ -251,11 +251,11 @@ const AdminDashboard = {
         formData.append('tg_data', window.Telegram.WebApp.initData);
         try {
           const response = await fetch(webhookUrl, { method: 'POST', body: formData });
-          if (!response.ok) { 
+          if (!response.ok) {
             if (response.status === 400) {
               throw new Error('Ошибка. Данный счет уже загружался на согласование.');
             }
-            throw new Error('Network response was not ok'); 
+            throw new Error('Network response was not ok');
           }
         } catch (error) {
           this.setMessage(error.message, 'red');
@@ -266,23 +266,23 @@ const AdminDashboard = {
       this.sentFilesCount = this.filesToUpload.length;
       this.filesToUpload = [];
       this.uploadComment = ''; // Очищаем комментарий после отправки
-      this.isUploading = false;
-      this.showSuccessScreen = true;
-    },
-    async fetchDocuments() {
-      this.showingDocumentList = true;
-      this.isLoading = true;
       try {
         const response = await fetch(this.getAllInvoicesWebhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             tg_data: window.Telegram.WebApp.initData,
-            period: this.selectedPeriod
+            period: 'all' // Always fetch all to filter on frontend
           })
         });
         const data = await response.json();
-        this.documents = data;
+        console.log('Received documents:', data); // Debug: check data structure
+        if (data && data.length > 0) {
+          console.log('First document sample:', data[0]); // Debug: check fields of first doc
+          console.log('Document date value:', data[0].date); // Debug: check specific date field
+        }
+        // Filter on frontend
+        this.documents = this.filterDocumentsByPeriod(data, this.selectedPeriod);
       } catch (error) {
         this.setMessage('Не удалось загрузить документы.', 'red');
       } finally {

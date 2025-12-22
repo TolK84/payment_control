@@ -1,6 +1,6 @@
 const ApproverDashboard = {
   props: ['approverName'],
-  
+
   template: `
   <div>
     <div v-if="!showSuccessScreen && !selectedDocument">
@@ -232,9 +232,9 @@ const ApproverDashboard = {
       showErrorModal: false,
       errorMessage: '',
       // API URLs
-  getPendingInvoicesWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/get-pending-invoices',
-  getAllInvoicesWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/get-invoices',
-  submitDecisionWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/submit-decision',
+      getPendingInvoicesWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/get-pending-invoices',
+      getAllInvoicesWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/get-invoices',
+      submitDecisionWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/submit-decision',
       statusLabels: {
         approved: 'Согласован',
         pending: 'В обработке',
@@ -257,7 +257,7 @@ const ApproverDashboard = {
     getSuccessMessage() {
       const count = this.sentFilesCount;
       let word = '';
-      
+
       if (count === 1) {
         word = 'счет';
       } else if (count >= 2 && count <= 4) {
@@ -265,22 +265,22 @@ const ApproverDashboard = {
       } else {
         word = 'счетов';
       }
-      
+
       let verb = '';
       if (count === 1) {
         verb = 'успешно отправлен';
       } else {
         verb = 'успешно отправлены';
       }
-      
+
       return `${count} ${word} ${verb} на согласование`;
     },
-    
+
     closeSuccessScreen() {
       this.showSuccessScreen = false;
       this.sentFilesCount = 0;
     },
-    
+
     onDragOver() { this.isDragOver = true; },
     onDragLeave() { this.isDragOver = false; },
     onDrop(event) {
@@ -305,11 +305,11 @@ const ApproverDashboard = {
       this.uploadComment = '';
       this.setUploadMessage('Загрузка отменена', 'red');
     },
-    
+
     async sendFiles() {
       if (this.filesToUpload.length === 0) return;
       this.isUploading = true;
-  const webhookUrl = 'https://n8n.eurasiantech.kz/webhook/upload-invoice';
+      const webhookUrl = 'https://n8n.eurasiantech.kz/webhook/upload-invoice';
       for (const file of this.filesToUpload) {
         const formData = new FormData();
         formData.append('file', file);
@@ -317,11 +317,11 @@ const ApproverDashboard = {
         formData.append('tg_data', window.Telegram.WebApp.initData);
         try {
           const response = await fetch(webhookUrl, { method: 'POST', body: formData });
-          if (!response.ok) { 
+          if (!response.ok) {
             if (response.status === 400) {
               throw new Error('Ошибка. Данный счет уже загружался на согласование.');
             }
-            throw new Error('Network response was not ok'); 
+            throw new Error('Network response was not ok');
           }
         } catch (error) {
           this.setUploadMessage(error.message, 'red');
@@ -335,7 +335,7 @@ const ApproverDashboard = {
       this.isUploading = false;
       this.showSuccessScreen = true;
     },
-    
+
     setUploadMessage(message, color = 'black') {
       if (color === 'red') {
         // Для ошибок показываем модальное окно
@@ -357,12 +357,12 @@ const ApproverDashboard = {
       this.uploadComment = '';
       this.isUploading = false;
     },
-    
+
     // Status view methods
     getPersonStatus(doc, person) {
       const statusField = `Статус ${person}`;
       const status = doc[statusField] || "";
-      
+
       if (status === "Согласовано") {
         return 'status-active-approved';
       } else if (status === "Отказано") {
@@ -371,66 +371,46 @@ const ApproverDashboard = {
         return 'status-active-empty';
       }
     },
-    
+
     getPersonTitle(doc, person) {
       const statusField = `Статус ${person}`;
       const status = doc[statusField] || "Не рассмотрено";
       return `${person}: ${status}`;
     },
-    
-    async fetchAllDocuments() {
-      this.isLoadingStatus = true;
-      try {
-        const response = await fetch(this.getAllInvoicesWebhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            tg_data: window.Telegram.WebApp.initData,
-            period: this.selectedPeriod
-          })
-        });
-        const data = await response.json();
-        this.allDocuments = data;
-      } catch (error) {
-        this.setMessage('Не удалось загрузить документы.', 'red');
-      } finally {
-        this.isLoadingStatus = false;
-      }
-    },
-    
+
     switchToStatus() {
       this.currentView = 'status';
       this.fetchAllDocuments();
     },
-    
+
     switchToApprove() {
       this.currentView = 'approve';
       this.fetchDocuments();
     },
-    
+
     // Approval functionality methods
     formatAmount(amount) {
       if (!amount) return '';
       return new Intl.NumberFormat('ru-RU').format(amount) + ' ₸';
     },
-    
+
     getMyStatusText(doc) {
       // Показываем общий статус документа или "Не рассмотрено"
       return 'Не рассмотрено';
     },
-    
+
     getMyStatusClass(doc) {
       // Всегда показываем как pending, так как статус определяется бэкендом
       return 'status-pending';
     },
-    
+
     selectDocument(doc) {
       this.selectedDocument = doc;
       this.decision = '';
       this.comment = '';
       this.message = '';
     },
-    
+
     backToList() {
       this.selectedDocument = null;
       this.decision = '';
@@ -441,11 +421,11 @@ const ApproverDashboard = {
         this.fetchDocuments();
       }, 500);
     },
-    
+
     setDecision(newDecision) {
       this.decision = newDecision;
     },
-    
+
     getCommentPlaceholder() {
       if (this.decision === 'Согласовано') {
         return 'Комментарий к согласованию (необязательно)';
@@ -454,18 +434,18 @@ const ApproverDashboard = {
       }
       return '';
     },
-    
+
     async submitDecision() {
       if (!this.decision) {
         this.setMessage('Выберите решение', 'red');
         return;
       }
-      
+
       if (this.decision === 'Отказано' && !this.comment.trim()) {
         this.setMessage('При отказе необходимо указать причину', 'red');
         return;
       }
-      
+
       this.isSubmitting = true;
       try {
         const requestData = {
@@ -475,18 +455,18 @@ const ApproverDashboard = {
           comment: this.comment,
           tg_data: window.Telegram.WebApp.initData
         };
-        
+
         console.log('Отправляем данные:', requestData);
-        
+
         const response = await fetch(this.submitDecisionWebhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(requestData)
         });
-        
+
         console.log('Статус ответа:', response.status);
         console.log('Заголовки ответа:', Object.fromEntries(response.headers.entries()));
-        
+
         // Проверяем HTTP статус
         if (!response.ok) {
           const errorText = await response.text();
@@ -494,10 +474,10 @@ const ApproverDashboard = {
           this.setMessage(`Ошибка сервера: ${response.status} - ${errorText}`, 'red');
           return;
         }
-        
+
         const responseText = await response.text();
         console.log('Сырой ответ сервера:', responseText);
-        
+
         let result;
         try {
           result = JSON.parse(responseText);
@@ -506,12 +486,12 @@ const ApproverDashboard = {
           this.setMessage('Сервер вернул некорректный JSON ответ', 'red');
           return;
         }
-        
+
         console.log('Распарсенный результат:', result);
-        
+
         // Проверяем успех по формату ответа
         let isSuccess = false;
-        
+
         if (result.success === true || result.status === 'success') {
           // Стандартный формат с полем success
           isSuccess = true;
@@ -526,7 +506,7 @@ const ApproverDashboard = {
           // HTTP 200 без ошибок - считаем успехом
           isSuccess = true;
         }
-        
+
         if (isSuccess) {
           this.setMessage('Решение успешно отправлено', 'green');
           // Просто возвращаемся к списку без дополнительного обновления
@@ -543,14 +523,14 @@ const ApproverDashboard = {
         this.isSubmitting = false;
       }
     },
-    
+
     setMessage(message, color = 'black') {
       this.message = message;
       this.messageColor = color;
       clearTimeout(this.messageTimer);
       this.messageTimer = setTimeout(() => { this.message = ''; }, 3000);
     },
-    
+
     async fetchDocuments() {
       this.isLoading = true;
       try {
@@ -560,17 +540,17 @@ const ApproverDashboard = {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ tg_data: window.Telegram.WebApp.initData })
         });
-        
+
         console.log('Статус ответа:', response.status);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP ошибка: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        
+
         console.log('Ответ от get-pending-invoices:', data);
-        
+
         // Проверяем если бэкенд вернул сообщение о том, что нет документов
         if (typeof data === 'string' && data.includes('Нет счетов на согласование')) {
           console.log('Бэкенд сообщил: нет документов для согласования');
@@ -581,7 +561,7 @@ const ApproverDashboard = {
           // Если данные в другом формате
           this.documents = [];
         }
-        
+
         console.log('Установлены документы:', this.documents);
       } catch (error) {
         console.error('Ошибка загрузки документов:', error);
