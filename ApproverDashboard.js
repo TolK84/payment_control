@@ -378,6 +378,50 @@ const ApproverDashboard = {
       return `${person}: ${status}`;
     },
 
+    filterDocumentsByPeriod(documents, period) {
+      if (period === 'all') return documents;
+
+      const now = new Date();
+      const cutoffDate = new Date();
+      cutoffDate.setHours(0, 0, 0, 0);
+
+      if (period === 'week') {
+        cutoffDate.setDate(now.getDate() - 7);
+      } else if (period === 'month') {
+        cutoffDate.setMonth(now.getMonth() - 1);
+      }
+
+      return documents.filter(doc => {
+        if (!doc.date) return false;
+        // Format "YYYY-MM-DD"
+        const docDate = new Date(doc.date);
+        if (isNaN(docDate.getTime())) return true;
+
+        docDate.setHours(0, 0, 0, 0);
+        return docDate >= cutoffDate;
+      });
+    },
+
+    async fetchAllDocuments() {
+      this.isLoadingStatus = true;
+      try {
+        const response = await fetch(this.getAllInvoicesWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tg_data: window.Telegram.WebApp.initData,
+            period: 'all' // Always fetch all
+          })
+        });
+        const data = await response.json();
+        this.allDocuments = this.filterDocumentsByPeriod(data, this.selectedPeriod);
+      } catch (error) {
+        this.setMessage('Не удалось загрузить документы.', 'red');
+      } finally {
+        this.isLoadingStatus = false;
+      }
+    },
+
     switchToStatus() {
       this.currentView = 'status';
       this.fetchAllDocuments();

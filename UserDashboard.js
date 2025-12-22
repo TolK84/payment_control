@@ -266,6 +266,39 @@ const UserDashboard = {
       this.sentFilesCount = this.filesToUpload.length;
       this.filesToUpload = [];
       this.uploadComment = ''; // Очищаем комментарий после отправки
+      this.isUploading = false;
+      this.showSuccessScreen = true;
+      // Background refresh
+      this.fetchDocuments();
+    },
+
+    filterDocumentsByPeriod(documents, period) {
+      if (period === 'all') return documents;
+
+      const now = new Date();
+      const cutoffDate = new Date();
+      cutoffDate.setHours(0, 0, 0, 0);
+
+      if (period === 'week') {
+        cutoffDate.setDate(now.getDate() - 7);
+      } else if (period === 'month') {
+        cutoffDate.setMonth(now.getMonth() - 1);
+      }
+
+      return documents.filter(doc => {
+        if (!doc.date) return false;
+        // Date format "YYYY-MM-DD"
+        const docDate = new Date(doc.date);
+        if (isNaN(docDate.getTime())) return true;
+
+        docDate.setHours(0, 0, 0, 0);
+        return docDate >= cutoffDate;
+      });
+    },
+
+    async fetchDocuments() {
+      this.showingDocumentList = true;
+      this.isLoading = true;
       try {
         const response = await fetch(this.getInvoicesWebhookUrl, {
           method: 'POST',
