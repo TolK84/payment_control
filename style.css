@@ -389,9 +389,9 @@ form p {
 }
 
 .status-active-postponed {
-  background-color: #fff9c4;
-  border-color: #fdd835;
-  box-shadow: 0 0 0 1px #fdd835;
+  background-color: #fffde7 !important;
+  border-color: #f9a825 !important;
+  box-shadow: 0 0 0 1px #f9a825 !important;
 }
 
 .doc-name {
@@ -932,7 +932,15 @@ form p {
 /* Filter section styles */
 .filter-section {
   margin-bottom: 15px;
-  text-align: right;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.document-counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6c757d;
 }
 
 .period-filter {

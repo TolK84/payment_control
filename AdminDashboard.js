@@ -13,6 +13,7 @@ const AdminDashboard = {
         <div v-if="showingDocumentList">
           <h2>Статус счетов</h2>
           <div class="filter-section">
+            <span class="document-counter">{{ documents.length }} {{ getDocumentWord(documents.length) }}</span>
             <select v-model="selectedPeriod" @change="fetchDocuments" class="period-filter">
               <option value="week">За неделю</option>
               <option value="month">За месяц</option>
@@ -188,6 +189,15 @@ const AdminDashboard = {
     formatAmount(amount) {
       if (!amount) return '';
       return new Intl.NumberFormat('ru-RU').format(amount) + ' ₸';
+    },
+    getDocumentWord(count) {
+      if (count % 10 === 1 && count % 100 !== 11) {
+        return 'счет';
+      } else if ([2, 3, 4].includes(count % 10) && ![12, 13, 14].includes(count % 100)) {
+        return 'счета';
+      } else {
+        return 'счетов';
+      }
     },
     closeSuccessScreen() {
       this.showSuccessScreen = false;
