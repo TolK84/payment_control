@@ -1,4 +1,3 @@
-// filepath: d:\Git\payment_control\app.js
 const app = Vue.createApp({
     data() {
         return {
@@ -10,8 +9,8 @@ const app = Vue.createApp({
             message: '',
             messageColor: 'green', // Устанавливаем зеленый по умолчанию
             isLoading: false,
-            checkAuthWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/check-auth',
-            loginWebhookUrl: 'https://n8n.eurasiantech.kz/webhook/login',
+            checkAuthWebhookUrl: CONFIG.url('checkAuth'),
+            loginWebhookUrl: CONFIG.url('login'),
             isDesktop: window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp.platform === 'tdesktop' : false,
             hasFiles: false
         }

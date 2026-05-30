@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com https://telegram.org; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://n8n.eurasiantech.kz; frame-ancestors 'none'">
   <title>Payment Control</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/vue@3.5.35/dist/vue.global.js" integrity="sha384-UmQhXkGYtdLFmiEUVEftUIiP7sUhWVtDrV3DeJ6D1iBqZMb26288+J9qNNwMhRuC" crossorigin="anonymous"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="config.js"></script>
+  <script src="utils/invoiceHelpers.js"></script>
 </head>
 <body>
   <div id="app">
