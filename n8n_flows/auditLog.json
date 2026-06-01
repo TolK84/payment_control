@@ -1,0 +1,225 @@
+{
+  "name": "auditLog",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "Execute Workflow Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f1000001",
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}",
+              "type": "string"
+            },
+            {
+              "id": "f1000002",
+              "name": "tg_id",
+              "value": "={{ $json.tg_id || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "f1000003",
+              "name": "login",
+              "value": "={{ $json.login || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "f1000004",
+              "name": "action",
+              "value": "={{ $json.action || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "f1000005",
+              "name": "document_id",
+              "value": "={{ $json.document_id || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "f1000006",
+              "name": "old_status",
+              "value": "={{ $json.old_status || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "f1000007",
+              "name": "new_status",
+              "value": "={{ $json.new_status || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "f1000008",
+              "name": "details",
+              "value": "={{ $json.details || '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [220, 0],
+      "id": "a1b2c3d4-0002-0002-0002-000000000002",
+      "name": "Build Audit Row"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1GkpFQ275xwCdeKTZ1BaWDL7PVD4L_lz-PyjRDmp4z8Q",
+          "mode": "list",
+          "cachedResultName": "Audit Log"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=audit",
+          "mode": "list",
+          "cachedResultName": "Audit"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.timestamp }}",
+            "tg_id": "={{ $json.tg_id }}",
+            "login": "={{ $json.login }}",
+            "action": "={{ $json.action }}",
+            "document_id": "={{ $json.document_id }}",
+            "old_status": "={{ $json.old_status }}",
+            "new_status": "={{ $json.new_status }}",
+            "details": "={{ $json.details }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tg_id",
+              "displayName": "tg_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "login",
+              "displayName": "login",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "action",
+              "displayName": "action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "document_id",
+              "displayName": "document_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "old_status",
+              "displayName": "old_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "new_status",
+              "displayName": "new_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "details",
+              "displayName": "details",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [440, 0],
+      "id": "a1b2c3d4-0003-0003-0003-000000000003",
+      "name": "Append to Audit Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "q03GRbHkwG58L5LA",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Build Audit Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Audit Row": {
+      "main": [
+        [
+          {
+            "node": "Append to Audit Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
