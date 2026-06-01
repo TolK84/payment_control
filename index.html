@@ -9,13 +9,14 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://unpkg.com https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://n8n.eurasiantech.kz; frame-ancestors 'none'">
   <title>Payment Control</title>
   <link rel="stylesheet" href="style.css">
+  <style>[v-cloak]{display:none}</style>
   <script src="https://unpkg.com/vue@3.5.35/dist/vue.global.js" integrity="sha384-UmQhXkGYtdLFmiEUVEftUIiP7sUhWVtDrV3DeJ6D1iBqZMb26288+J9qNNwMhRuC" crossorigin="anonymous"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="config.js"></script>
   <script src="utils/invoiceHelpers.js"></script>
 </head>
 <body>
-  <div id="app">
+  <div id="app" v-cloak>
 
     <div v-if="authState === 'checking'" class="checking-state">
       <h1>Проверка авторизации...</h1>
